@@ -55,15 +55,33 @@
                     </li>
                 </ul>
                 {%if user.is_authenticated%}
-                <a href="" id="logout-btn" class="link-primary">{{user}}: Выйти</a>
+                <a type="#" class="link-primary" data-bs-toggle="modal" data-bs-target="#logoutModal">{{user}} :Выйти</a>
                 {%else%}
-                <a href="{%url 'users:logout'%}" class="link-primary">Войти</a>
+                <a href="{%url 'users:login'%}" class="link-primary">Войти</a>
                 {%endif%}
             </div>
         </div>
     </nav>
     {%block content%}
     {%endblock%}
+    <div class="modal" tabindex="-1" id="logoutModal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Modal title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Хотите выйти?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+              <button type="button" id="logout-btn" class="btn btn-primary">Выйти</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
     <script>
         var csrf = '{{csrf_token}}'
         var logoutUrl = "{%url 'users:logout'%}"
@@ -86,7 +104,7 @@
                 headers: headers,
             })
             if (response.ok) {
-                console.log(await response.json())
+                window.location.href = '/'
             } else {
                 alert(await response.text())
             }

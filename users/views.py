@@ -16,10 +16,10 @@ class SessionLoginView(APIView):
             return [TemplateHTMLRenderer()]
         return [JSONRenderer()]
 
-    def get(self, request, format=None):
+    def get(self, request, format=None):  # noqa: A002
         return Response(template_name=self.template_name)
 
-    def post(self, request, format=None):
+    def post(self, request, format=None):  # noqa: A002
         serializer = CustomUserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = authenticate(
@@ -30,7 +30,10 @@ class SessionLoginView(APIView):
         if user is not None:
             login(request, user)
             return Response({'success': True})
-        return Response({'success': False, 'non_field_errors': 'Wrong email or password'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {'success': False, 'non_field_errors': 'Wrong email or password'},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
 
 class CustomUserRegisterView(APIView):
     template_name = 'users/sign_up.html'
@@ -40,10 +43,10 @@ class CustomUserRegisterView(APIView):
             return [TemplateHTMLRenderer()]
         return [JSONRenderer()]
 
-    def get(self, request, format=None):
+    def get(self, request, format=None):  # noqa: A002
         return Response(template_name=self.template_name)
 
-    def post(self, request, format=None):
+    def post(self, request, format=None):  # noqa: A002
         serializer = CustomUserRegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -54,6 +57,6 @@ class CustomUserRegisterView(APIView):
 class SessionLogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, format=None):
+    def post(self, request, format=None):  # noqa: A002
         logout(request)
         return Response({'success': True}, status=status.HTTP_200_OK)

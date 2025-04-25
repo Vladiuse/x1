@@ -49,7 +49,7 @@
             body: JSON.stringify(loginForm.toDict())
         })
         if (response.ok){
-            alert(await response.json())
+            window.location.href = '/'
         } else {
             // alert(await response.text())
             loginForm.showErrors(await response.json())
