@@ -1,0 +1,117 @@
+{%extends 'base.html'%}
+{%load static%}
+
+{%block head%}
+<script src="{% static 'js/bs_form.js' %}"></script>
+<link rel="stylesheet" href="{% static 'users/css/auth_form.css' %}">
+{%endblock%}
+{%block content%}
+<div class="login-form-wrap">
+    <form method="" action="" class="" id="login-form">
+        <div class="invalid-feedback non-field-invalid-feedback"></div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email</label>
+            <input  type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required
+                name="email" >
+                <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password 1</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" required name="password1">
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password 2</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" required name="password2">
+            <div class="invalid-feedback"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Войти</button>
+        <div class="" id="registry">
+            <a href="{%url 'users:login' %}" class="link-primary">Уже есть аккаунт? Войтиде</a>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    var loginFormElem = document.getElementById('login-form')
+    var loginForm = new BsJsonForm(loginFormElem)
+    var csrf = '{{csrf_token}}'
+    var loginUrl = "{%url 'users:sign_up'%}"
+    var headers = {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrf,
+    }
+    loginForm.feed({'email': 'vlad@gmail.com', 'password1': '2030'})
+    loginForm.submitFunction = login
+
+    async function login(e) {
+        e.preventDefault()
+        var response = await fetch(loginUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(loginForm.toDict())
+        })
+        if (response.ok){
+            alert(await response.json())
+        } else {
+            // alert(await response.text())
+            loginForm.showErrors(await response.json())
+        }
+    }
+</script>
+{%endblock%}
+
+
+<!--
+
+
+<div class="container">
+    <form action="" method="POST" id="login-form">
+        {%csrf_token%}
+        <div class="md-3">
+            <input class="form-control" type="email" name="email" value="vlad@gmail.com"><br>
+        </div>
+        <div class="md-3">
+            <input class="form-control" type="password" name="password" value="2030"><br>
+
+        </div>
+        <button class="btn btn-primary" type="submit">LOGIN</button>
+    </form>
+</div>
+
+<script>
+    var loginUrl = "{%url 'users:login' %}"
+    var loginForm = document.getElementById('login-form')
+    loginForm.addEventListener('submit', function (e) {
+        e.preventDefault()
+        login()
+    })
+
+    async function login() {
+        var email = loginForm.querySelector('input[name=email]').value
+        var password = loginForm.querySelector('input[name=password]').value
+        var csrf = loginForm.querySelector('input[name=csrfmiddlewaretoken]').value
+        var data = {
+            'email': email,
+            'password': password,
+            'csrf': csrf,
+        }
+        var headers = {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrf,
+        }
+        var response = await fetch(loginUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(data),
+        })
+        if (response.ok) {
+            console.log(await response.json())
+        } else {
+            alert(await response.text())
+        }
+    }
+</script>
+-->
