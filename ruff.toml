@@ -39,6 +39,7 @@ ignore = [
 "*/views.py" = [
     "ARG002",  # args
     "ANN201",  # return type in views
+    "ARG001",  # Unused function argument
 ]
 
 "*/serializers.py" = [
