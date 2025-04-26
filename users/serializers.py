@@ -4,7 +4,9 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
-from users.models import CustomUser
+from users.models import CustomUser, ResetUserPasswordCode
+
+
 
 
 class CustomUserLoginSerializer(serializers.Serializer):
@@ -21,6 +23,7 @@ class CustomUserRegisterSerializer(serializers.Serializer):
         email = validated_data['email']
         password = validated_data['password1']
         return CustomUser.objects.create_user(email=email, password=password)
+
     def validate_email(self, value: str) -> str:
         if CustomUser.objects.filter(email=value).exists():
             raise ValidationError('User with this email already exists')
@@ -54,3 +57,28 @@ class CustomUserChangePasswordSerializer(serializers.Serializer):
         except DjangoValidationError as error:
             raise ValidationError({'password1': error.messages})
         return attrs
+
+
+class CreateResetPasswordCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def create(self, validated_data: dict) -> ResetUserPasswordCode:
+        return ResetUserPasswordCode.objects.create_for_user(user=self.user)
+
+    def validate_email(self, value: str) -> str:
+        email = value
+        try:
+            self.user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            raise ValidationError({'email': 'User with this email not found'})
+        return value
+
+class ResetPasswordCodeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ResetUserPasswordCode
+        exclude = ('reset_password_code', 'is_used')
+
+class ActivateResetPasswordSerializer(serializers.Serializer):
+    # reset_password_id = serializers.PrimaryKeyRelatedField(queryset=ResetUserPasswordCode.objects.all())
+    reset_password_code = serializers.CharField(max_length=6)

@@ -1,6 +1,9 @@
-from django.urls import path
-
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
+
+router = DefaultRouter()
+router.register('reset-password-codes', views.ResetPasswordView, basename='reset_password_code')
 
 app_name = 'users'
 
@@ -10,3 +13,5 @@ urlpatterns = [
     path('sign-up/', views.CustomUserRegisterView.as_view(), name='sign_up'),
     path('change-password/', views.CustomUserChangePasswordView.as_view(), name='change_password'),
 ]
+
+urlpatterns += router.urls
