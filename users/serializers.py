@@ -1,4 +1,6 @@
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
@@ -29,4 +31,24 @@ class CustomUserRegisterSerializer(serializers.Serializer):
         if attrs['password1'] != attrs['password2']:
             raise ValidationError({'password2': 'Not equal passwords'})
         validate_password(password=attrs['password1'])
+        return attrs
+
+
+class CustomUserChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(write_only=True)
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+
+    def validate(self, attrs: dict) -> dict:
+        user = self.context['request'].user
+        if not check_password(attrs['old_password'], user.password):
+            raise ValidationError({'old_password': 'Old password not correct'})
+        if attrs['password1'] != attrs['password2']:
+            raise ValidationError({'password2': 'Not equal passwords'})
+        if attrs['password1'] == attrs['old_password']:
+            raise ValidationError('New password must be not equal old password')
+        try:
+            validate_password(password=attrs['password1'])
+        except DjangoValidationError as error:
+            raise ValidationError({'password1': error.messages})
         return attrs

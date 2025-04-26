@@ -5,7 +5,9 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from users.serializers import CustomUserLoginSerializer, CustomUserRegisterSerializer
+from users.serializers import CustomUserLoginSerializer, CustomUserRegisterSerializer, CustomUserChangePasswordSerializer
+
+from .utils import logout_user_sessions
 
 
 class SessionLoginView(APIView):
@@ -59,4 +61,28 @@ class SessionLogoutView(APIView):
 
     def post(self, request, format=None):  # noqa: A002
         logout(request)
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class CustomUserChangePasswordView(APIView):
+
+    template_name = 'users/change_password.html'
+    permission_classes = [IsAuthenticated]
+
+    def get_renderers(self):
+        if self.request.method == 'GET':
+            return [TemplateHTMLRenderer()]
+        return [JSONRenderer()]
+
+    def get(self, request, format=None):  # noqa: A002
+        return Response(template_name=self.template_name)
+
+    def post(self, request, format=None):   # noqa: A002
+        serializer = CustomUserChangePasswordSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        new_password = serializer.validated_data['password1']
+        user = request.user
+        user.set_password(new_password)
+        user.save()
+        logout_user_sessions(user=user)
         return Response({'success': True}, status=status.HTTP_200_OK)
