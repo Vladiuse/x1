@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register('reset-password-codes', views.ResetPasswordView, basename='resetuserpasswordcode')
+router.register('reset-password-codes', views.ResetPasswordView)
 
 app_name = 'users'
 
