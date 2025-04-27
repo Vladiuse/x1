@@ -70,11 +70,13 @@ class CreateResetPasswordCodeSerializer(serializers.Serializer):
         try:
             self.user = CustomUser.objects.get(email=email)
         except CustomUser.DoesNotExist:
-            raise ValidationError({'email': 'User with this email not found'})
+            raise ValidationError('User with this email not found')
         return value
 
 class ResetPasswordCodeSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='users:resetuserpasswordcode-detail')
+    activate_reset_password_url = serializers.HyperlinkedIdentityField(view_name='users:resetuserpasswordcode-activate-reset-password')
+    reset_password_url = serializers.HyperlinkedIdentityField(view_name='users:resetuserpasswordcode-reset-password')
     class Meta:
         model = ResetUserPasswordCode
         fields = '__all__'

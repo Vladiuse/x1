@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -8,6 +9,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins
 from .models import ResetUserPasswordCode
 from rest_framework.decorators import action
+from django.views.decorators.http import require_http_methods
 
 from users.serializers import (
     CustomUserLoginSerializer,
@@ -100,22 +102,9 @@ class CustomUserChangePasswordView(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
 
-class CustomUserCreateResetPasswordView(APIView):
-    template_name = 'users/change_password.html'
-
-    def get_renderers(self):
-        if self.request.method == 'GET':
-            return [TemplateHTMLRenderer()]
-        return [JSONRenderer()]
-
-    def get(self, request, format=None):  # noqa: A002
-        return Response(template_name=self.template_name)
-
-    def post(self, request, format=None):  # noqa: A002
-        serializer = CreateResetPasswordCodeSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.instance
-
+@require_http_methods(['GET'])
+def reset_password(request):
+    return render(request, 'users/reset_password.html')
 
 class ResetPasswordView(mixins.RetrieveModelMixin,
                         mixins.ListModelMixin,
@@ -128,7 +117,7 @@ class ResetPasswordView(mixins.RetrieveModelMixin,
         serializer = CreateResetPasswordCodeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         reset_password = serializer.save()
-        serializer = ResetPasswordCodeSerializer(reset_password)
+        serializer = ResetPasswordCodeSerializer(reset_password,  context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['POST'], detail=True)
