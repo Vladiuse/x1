@@ -1,0 +1,204 @@
+{%extends 'base.html'%}
+{%load static%}
+{%block head%}
+<script src="{% static 'js/bs_form.js' %}"></script>
+<link rel="stylesheet" href="{% static 'users/css/auth_form.css' %}">
+{%endblock%}
+{%block content%}
+<style>
+    #collection-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #link-collection-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+</style>
+<h1>links</h1>
+<div class="container" id="link-collection-container">
+
+</div>
+<div class="container">
+    <div class="collapse" id="collapseCollectionForm">
+        <form action="" id="collection-form">
+            <div class="invalid-feedback non-field-invalid-feedback"></div>
+            <input type="hidden" class="form-control" required name="id">
+            <div class="mb-3">
+                <label for="collection-name" class="form-label">Old Password</label>
+                <input type="text" class="form-control" id="collection-name" required name="name">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="mb-3">
+                <label for="collection-description" class="form-label">Old Password</label>
+                <input type="text" class="form-control" id="collection-description" required name="description">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="mb-3"><button type="submit" class="btn btn-primary">Сохранить</button></div>
+        </form>
+    </div>
+</div>
+
+<!-- DELETE COLLECTION MODAL -->
+<div class="modal fade" id="deleteCollectionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteCollectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteCollectionModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="" id="delete-collection-form">
+                <div class="invalid-feedback non-field-invalid-feedback"></div>
+                <input type="text" class="form-control" required name="id">
+                <button type="submit" class="btn btn-primary">Удалить</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+    var csrf = '{{csrf_token}}'
+    var headers = {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrf,
+    }
+    class LinkCollectionsApi {
+        constructor() {
+
+        }
+
+        async list() {
+            var url = "{%url 'links:linkcollections-list'%}"
+            var response = await fetch(url, {
+                method: 'GET',
+                headers: headers,
+            })
+            return await response.json()
+        }
+
+        async deleteCollection(collectionId){
+            var url = "{%url 'links:linkcollections-list'%}" + collectionId + '/'
+            var response = await fetch(url, {
+                method: 'DELETE',
+                headers: headers,
+            })
+            return await response
+        }
+    }
+
+    class LinkCollectionButtonView {
+        constructor(collectionData) {
+            this.data = collectionData
+            this.elem = null
+        }
+
+        createElem() {
+            var collectionData = this.data
+            const container = document.createElement('div');
+            container.className = 'dropdown';
+
+            const button = document.createElement('button');
+            button.className = 'btn btn-secondary dropdown-toggle';
+            button.type = 'button';
+            button.id = `dropdownMenuButton-${collectionData.id}`;
+            button.setAttribute('data-bs-toggle', 'dropdown');
+            button.setAttribute('aria-expanded', 'false');
+            button.textContent = collectionData.name; // или другое поле из коллекции
+
+            const ul = document.createElement('ul');
+            ul.className = 'dropdown-menu';
+            ul.setAttribute('aria-labelledby', button.id);
+            var actionLink = this._createActionLink('Изменить', this.changeCollectionClickEvent)
+            ul.appendChild(actionLink);
+            var actionLink = this._createActionLink('Удалить', this.deleteCollectionClickEvent)
+            ul.appendChild(actionLink);
+            
+
+            container.appendChild(button);
+            container.appendChild(ul);
+            this.elem = container
+            return this.elem
+        }
+
+        _createActionLink(text, clickFunction){
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.className = 'dropdown-item';
+            a.href = '#'; // сюда можно подставить свою ссылку
+            a.textContent = text;
+            li.appendChild(a);
+            
+            a.addEventListener('click', clickFunction.bind(this))
+            return li
+        }
+        changeCollectionClickEvent(){
+            console.log('changeCollectionClickEvent')
+        }
+
+        deleteCollectionClickEvent(){
+            console.log('deleteCollectionClickEvent')
+            var deleteForm = new BsJsonForm(deleteCollectionForm)
+            var data = {'id': this.data['id']}
+            deleteForm.feed(data)
+            deleteForm.submitFunction = this.deleteCollectionEvent.bind(this)
+            console.log(deleteForm._submitFunction)
+            deleteCollectionModal.show()
+        }
+
+        async deleteCollectionEvent(e){
+            e.preventDefault()
+            var deleteForm = BsJsonForm.getInstance(deleteCollectionForm)
+            var data = deleteForm.toDict()
+            var collectionId = data['id']
+            var response = await linkCollectionApi.deleteCollection(collectionId)
+            deleteCollectionModal.hide()
+
+        }
+        remove(){
+            this.elem.remove()
+        }
+
+    }
+
+    class LinkCollectionsView {
+        constructor() {
+            this.container = document.getElementById('link-collection-container')
+            this.collectionButtons = new Map()
+        }
+
+        async drawButtons() {
+            var buttonsData = await linkCollectionApi.list()
+            console.log(buttonsData)
+            buttonsData.forEach(collectionData => {
+                console.log(collectionData)
+                var collectionButton = new LinkCollectionButtonView(collectionData)
+                this.collectionButtons.set(collectionData.id, button)
+                var elem = collectionButton.createElem()
+                this.container.appendChild(elem)
+            })
+        }
+
+
+
+    }
+    var collectionFormElem = document.getElementById('collection-form')
+    var deleteCollectionForm = document.getElementById('delete-collection-form')
+    const linkCollectionApi = new LinkCollectionsApi()
+    const linkCollectionsView = new LinkCollectionsView()
+
+
+    var collapseCollectionFormElem = document.getElementById('collapseCollectionForm')
+    var collapseCollectionForm = new bootstrap.Collapse(collapseCollectionFormElem, {
+        // toggle: false
+    })
+
+    const deleteCollectionModalElem = document.getElementById('deleteCollectionModal')
+    const deleteCollectionModal = new bootstrap.Modal(deleteCollectionModalElem)
+
+    linkCollectionsView.drawButtons()
+</script>
+{%endblock%}
