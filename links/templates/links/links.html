@@ -21,7 +21,7 @@
 </style>
 <h1>links</h1>
 <div class="container" id="link-collection-container">
-
+    <button class="btn btn-primary" id="create-link-collection-btn">+ создать</button>
 </div>
 <div class="container">
     <div class="collapse" id="collapseCollectionForm">
@@ -80,6 +80,16 @@
                 headers: headers,
             })
             return await response.json()
+        }
+
+        async create(data) {
+            var url = "{%url 'links:linkcollections-list'%}"
+            var response = await fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            return response
         }
 
         async deleteCollection(collectionId) {
@@ -182,18 +192,41 @@
             var buttonsData = await linkCollectionApi.list()
             console.log(buttonsData)
             buttonsData.forEach(collectionData => {
-                console.log(collectionData)
-                var collectionButton = new LinkCollectionButtonView(
-                    collectionData,
-                    this.deleteCollectionEvent.bind(this),
-                    this.updateCollectionEvent.bind(this),
-                )
-                this.collectionButtons.set(collectionData.id, collectionButton)
-                var elem = collectionButton.createElem()
-                this.container.appendChild(elem)
+                
+                this._drawButton(collectionData)
             })
         }
 
+        _drawButton(collectionData) {
+            var collectionButton = new LinkCollectionButtonView(
+                collectionData,
+                this.deleteCollectionEvent.bind(this),
+                this.updateCollectionEvent.bind(this),
+            )
+            this.collectionButtons.set(collectionData.id, collectionButton)
+            var elem = collectionButton.createElem()
+            this.container.appendChild(elem)
+        }
+
+        createLinkCollectionEventClick() {
+            collapseCollectionForm.show()
+            var form = new BsJsonForm(collectionFormElem)
+            form.submitFunction = this.createLinkCollectionHandler.bind(this)
+        }
+
+        async createLinkCollectionHandler(e) {
+            e.preventDefault()
+            var form = BsJsonForm.getInstance(collectionFormElem)
+            var data = form.toDict()
+            var response = await linkCollectionApi.create(data)
+            if (response.ok) {
+                var data = await response.json()
+                this._drawButton(data)
+                collapseCollectionForm.hide()
+            } else {
+                alert(await response.text())
+            }
+        }
 
         async deleteCollectionEvent(e) {
             e.preventDefault()
@@ -224,20 +257,21 @@
             }
         }
 
-        updateButton(collectionId, NewData){
+        updateButton(collectionId, NewData) {
             var oldcollectionBtn = this.collectionButtons.get(collectionId)
             this.collectionButtons.delete(collectionId)
             var collectionButton = new LinkCollectionButtonView(
-                    NewData,
-                    this.deleteCollectionEvent.bind(this),
-                    this.updateCollectionEvent.bind(this),
-                )
+                NewData,
+                this.deleteCollectionEvent.bind(this),
+                this.updateCollectionEvent.bind(this),
+            )
             this.collectionButtons.set(NewData.id, collectionButton)
             var elem = collectionButton.createElem()
             oldcollectionBtn.elem.replaceWith(elem)
         }
 
     }
+    const createLinkCollectionBtn = document.getElementById('create-link-collection-btn')
     var collectionFormElem = document.getElementById('collection-form')
     var deleteCollectionForm = document.getElementById('delete-collection-form')
     const linkCollectionApi = new LinkCollectionsApi()
@@ -252,6 +286,7 @@
     const deleteCollectionModalElem = document.getElementById('deleteCollectionModal')
     const deleteCollectionModal = new bootstrap.Modal(deleteCollectionModalElem)
 
+    createLinkCollectionBtn.addEventListener('click', linkCollectionsView.createLinkCollectionEventClick.bind(linkCollectionsView))
     linkCollectionsView.drawButtons()
 </script>
 {%endblock%}
