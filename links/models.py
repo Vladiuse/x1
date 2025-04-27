@@ -46,7 +46,7 @@ class Link(models.Model):
     type = models.CharField(max_length=20, blank=True, choices=PAGE_TYPES)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
-    collections = models.ManyToManyField(LinkCollection, related_name='links', related_query_name='link')
+    collections = models.ManyToManyField(LinkCollection, related_name='links', related_query_name='link', blank=True)
 
     class Meta:
         unique_together = ('owner', 'url')
