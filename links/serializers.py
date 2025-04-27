@@ -17,7 +17,7 @@ class LinkCollectionSerializer(serializers.ModelSerializer):
         validators = [
             UniqueTogetherValidator(
                 queryset=LinkCollection.objects.all(),
-                fields=['owner', 'url'],
+                fields=['owner', 'name'],
             ),
         ]
 

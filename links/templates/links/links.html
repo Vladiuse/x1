@@ -8,9 +8,10 @@
 <style>
     #collection-form {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         gap: 10px;
     }
+
 
     #link-collection-container {
         display: flex;
@@ -28,12 +29,12 @@
             <div class="invalid-feedback non-field-invalid-feedback"></div>
             <input type="hidden" class="form-control" required name="id">
             <div class="mb-3">
-                <label for="collection-name" class="form-label">Old Password</label>
+                <label for="collection-name" class="form-label">Название</label>
                 <input type="text" class="form-control" id="collection-name" required name="name">
                 <div class="invalid-feedback"></div>
             </div>
             <div class="mb-3">
-                <label for="collection-description" class="form-label">Old Password</label>
+                <label for="collection-description" class="form-label">Описание</label>
                 <input type="text" class="form-control" id="collection-description" required name="description">
                 <div class="invalid-feedback"></div>
             </div>
@@ -89,16 +90,27 @@
             })
             return await response
         }
+
+        async updateCollection(collectionId, data) {
+            var url = "{%url 'links:linkcollections-list'%}" + collectionId + '/'
+            var response = await fetch(url, {
+                method: 'PATCH',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            return response
+        }
     }
 
     class LinkCollectionButtonView {
-        constructor(collectionData, deleteEventhandler) {
+        constructor(collectionData, deleteEventhandler, updateEventHandler) {
             this.data = collectionData
             this.deleteEventhandler = deleteEventhandler
+            this.updateEventHandler = updateEventHandler
             this.elem = null
         }
 
-        createElem(deleteEventClick) {
+        createElem() {
             var collectionData = this.data
             const container = document.createElement('div');
             container.className = 'dropdown';
@@ -109,7 +121,7 @@
             button.id = `dropdownMenuButton-${collectionData.id}`;
             button.setAttribute('data-bs-toggle', 'dropdown');
             button.setAttribute('aria-expanded', 'false');
-            button.textContent = collectionData.name; 
+            button.textContent = collectionData.name;
 
             const ul = document.createElement('ul');
             ul.className = 'dropdown-menu';
@@ -130,7 +142,7 @@
             const li = document.createElement('li');
             const a = document.createElement('a');
             a.className = 'dropdown-item';
-            a.href = '#'; 
+            a.href = '#';
             a.textContent = text;
             li.appendChild(a);
             a.addEventListener('click', clickFunction.bind(this))
@@ -138,6 +150,10 @@
         }
         changeCollectionClickEvent() {
             console.log('changeCollectionClickEvent')
+            var changeForm = new BsJsonForm(collectionFormElem)
+            changeForm.feed(this.data)
+            changeForm.submitFunction = this.updateEventHandler
+            collapseCollectionForm.show()
         }
 
         remove() {
@@ -167,7 +183,11 @@
             console.log(buttonsData)
             buttonsData.forEach(collectionData => {
                 console.log(collectionData)
-                var collectionButton = new LinkCollectionButtonView(collectionData, this.deleteCollectionEvent.bind(this))
+                var collectionButton = new LinkCollectionButtonView(
+                    collectionData,
+                    this.deleteCollectionEvent.bind(this),
+                    this.updateCollectionEvent.bind(this),
+                )
                 this.collectionButtons.set(collectionData.id, collectionButton)
                 var elem = collectionButton.createElem()
                 this.container.appendChild(elem)
@@ -189,6 +209,33 @@
             }
         }
 
+        async updateCollectionEvent(e) {
+            e.preventDefault()
+            var updateForm = BsJsonForm.getInstance(collectionFormElem)
+            var data = updateForm.toDict()
+            var collectionId = data['id']
+            var response = await linkCollectionApi.updateCollection(collectionId, data)
+            if (response.ok) {
+                var newData = await response.json()
+                this.updateButton(newData['id'], newData)
+                collapseCollectionForm.hide()
+            } else {
+                alert(await response.text())
+            }
+        }
+
+        updateButton(collectionId, NewData){
+            var oldcollectionBtn = this.collectionButtons.get(collectionId)
+            this.collectionButtons.delete(collectionId)
+            var collectionButton = new LinkCollectionButtonView(
+                    NewData,
+                    this.deleteCollectionEvent.bind(this),
+                    this.updateCollectionEvent.bind(this),
+                )
+            this.collectionButtons.set(NewData.id, collectionButton)
+            var elem = collectionButton.createElem()
+            oldcollectionBtn.elem.replaceWith(elem)
+        }
 
     }
     var collectionFormElem = document.getElementById('collection-form')
@@ -199,7 +246,7 @@
 
     var collapseCollectionFormElem = document.getElementById('collapseCollectionForm')
     var collapseCollectionForm = new bootstrap.Collapse(collapseCollectionFormElem, {
-        // toggle: false
+        toggle: false
     })
 
     const deleteCollectionModalElem = document.getElementById('deleteCollectionModal')
