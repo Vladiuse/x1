@@ -41,11 +41,46 @@ class ResetUserPasswordCodeManager(models.Manager):
         )
 
 class ResetUserPasswordCode(models.Model):
+    MAX_ATTEMPTS = 3
+
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     email = models.EmailField()
     created = models.DateTimeField(auto_now_add=True)
     reset_password_code = models.CharField(max_length=6)
     expire_date = models.DateTimeField()
-    is_used = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+    verified_expire_date = models.DateTimeField(null=True, default=None)
+    attempts = models.PositiveIntegerField(default=0)
+    is_password_reset = models.BooleanField(default=False)
 
     objects = ResetUserPasswordCodeManager()
+
+    def check_code(self, code: str) -> tuple[bool, str]:
+        if self.is_verified:
+            return False, 'Code already verified'
+        if timezone.now() > self.expire_date:
+            return False, 'Code expired'
+        if self.reset_password_code == code:
+            self.verify()
+            return True, "Code verified successfully."
+        self.attempts += 1
+        self.save()
+        if self.attempts >= self.MAX_ATTEMPTS:
+            return False, 'Too many failed attempts.'
+        return False, 'Wrong code'
+
+    def verify(self) -> None:
+        self.is_verified = True
+        self.verified_expire_date = timezone.now() + timedelta(minutes=10)
+        self.save()
+
+    def is_password_can_be_reset(self) -> bool:
+        if not self.is_verified:
+            return False
+        if timezone.now() > self.verified_expire_date:
+            return False
+        return not self.is_password_reset
+
+    def mark_password_reset(self) -> None:
+        self.is_password_reset = True
+        self.save()

@@ -74,11 +74,25 @@ class CreateResetPasswordCodeSerializer(serializers.Serializer):
         return value
 
 class ResetPasswordCodeSerializer(serializers.ModelSerializer):
-
+    url = serializers.HyperlinkedIdentityField(view_name='users:resetuserpasswordcode-detail')
     class Meta:
         model = ResetUserPasswordCode
-        exclude = ('reset_password_code', 'is_used')
+        fields = '__all__'
+        # exclude = ('reset_password_code', 'is_used')
 
 class ActivateResetPasswordSerializer(serializers.Serializer):
-    # reset_password_id = serializers.PrimaryKeyRelatedField(queryset=ResetUserPasswordCode.objects.all())
     reset_password_code = serializers.CharField(max_length=6)
+
+class ResetPasswordSerializer(serializers.Serializer):
+
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+
+    def validate(self, attrs: dict) -> dict:
+        if attrs['password1'] != attrs['password2']:
+            raise ValidationError({'password2': 'Not equal passwords'})
+        try:
+            validate_password(password=attrs['password1'])
+        except DjangoValidationError as error:
+            raise ValidationError({'password1': error.messages})
+        return attrs

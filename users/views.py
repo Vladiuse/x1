@@ -16,6 +16,7 @@ from users.serializers import (
     CreateResetPasswordCodeSerializer,
     ResetPasswordCodeSerializer,
     ActivateResetPasswordSerializer,
+    ResetPasswordSerializer,
 )
 
 from .utils import logout_user_sessions
@@ -117,14 +118,11 @@ class CustomUserCreateResetPasswordView(APIView):
 
 
 class ResetPasswordView(mixins.RetrieveModelMixin,
+                        mixins.ListModelMixin,
                         GenericViewSet):
 
     queryset = ResetUserPasswordCode.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return CreateResetPasswordCodeSerializer
-        return ResetPasswordCodeSerializer
+    serializer_class = ResetPasswordCodeSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = CreateResetPasswordCodeSerializer(data=request.data)
@@ -138,6 +136,22 @@ class ResetPasswordView(mixins.RetrieveModelMixin,
         serializer = ActivateResetPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         password_code = self.get_object()
-        if serializer.validated_data['reset_password_code'] == password_code.reset_password_code:
+        is_code_correct, message = password_code.check_code(code=serializer.validated_data['reset_password_code'])
+        if is_code_correct:
             return Response({'success': True})
-        return Response({'success': False})
+        return Response({'success': False, 'message':message }, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['POST'], detail=True)
+    def reset_password(self, request, pk=None):
+        reset_password_code = self.get_object()
+        if reset_password_code.is_password_can_be_reset():
+            serializer = ResetPasswordSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            new_password = serializer.validated_data['password1']
+            user = reset_password_code.user
+            user.set_password(new_password)
+            user.save()
+            logout_user_sessions(user=user)
+            reset_password_code.mark_password_reset()
+            return Response({'status': True})
+        return Response({'success': False, 'message': 'Password cant be reseted'})
