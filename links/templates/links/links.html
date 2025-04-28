@@ -146,6 +146,26 @@
         </div>
     </div>
 </div>
+
+<!-- DELETE LINK MODAL -->
+<div class="modal fade" id="deleteLinkModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="deleteLinkModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteLinkModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" id="delete-link-form">
+                    <div class="invalid-feedback non-field-invalid-feedback"></div>
+                    <input type="hidden" class="form-control" required name="id">
+                    <button type="submit" class="btn btn-primary">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var csrf = '{{csrf_token}}'
     var headers = {
@@ -174,6 +194,15 @@
                 body: JSON.stringify(linkData)
             })
             return response
+        }
+
+        async delete(linkId){
+            var url = "{%url 'links:userlinks-list'%}" + linkId + '/'
+            var response = await fetch(url, {
+                method: 'DELETE',
+                headers: headers,
+            })
+            return await response
         }
     }
     class LinkCollectionsApi {
@@ -492,9 +521,22 @@
     }
 
     class LinkView {
-        constructor(linkData) {
+        constructor(linkData, deleteEventHandler) {
+            this.deleteEventHandler = deleteEventHandler
             this.data = linkData;
             this.elem = null
+        }
+
+        remove(){
+            this.elem.remove()
+        }
+
+        deleteEventClick(e){
+            e.preventDefault()
+            var deleteForm = new BsJsonForm(deleteLinkFormElem)
+            deleteForm.feed(this.data)
+            deleteForm.submitFunction = this.deleteEventHandler
+            deleteLinkModal.show()
         }
 
         createElem() {
@@ -531,6 +573,7 @@
             const deleteLink = document.createElement('p');
             deleteLink.className = 'card-text';
             const deleteAnchor = document.createElement('a');
+            deleteAnchor.addEventListener('click', this.deleteEventClick.bind(this))
             deleteAnchor.href = '#';
             deleteAnchor.className = 'link-danger';
             deleteAnchor.textContent = 'Удалить ссылку';
@@ -606,12 +649,28 @@
             var linksData = await linkApi.list()
             linksData.forEach(linkData => {
                 console.log(linkData)
-                var link = new LinkView(linkData)
+                var link = new LinkView(linkData, this.deleteLinkhandler.bind(this))
                 console.log(link)
                 var linkElem = link.createElem()
                 this.links.set(linkData.id, link)
                 this.containerElem.appendChild(linkElem)
             })
+        }
+
+        async deleteLinkhandler(e){
+            e.preventDefault()
+            var deleteForm = BsJsonForm.getInstance(deleteLinkFormElem)
+            var data = deleteForm.toDict()
+            console.log(data)
+            var response = await linkApi.delete(data.id)
+            if (response.ok) {
+                deleteLinkModal.hide()
+                var link = this.links.get(data.id)
+                link.remove()
+                this.links.delete(data.id)
+            } else {
+                alert(await response.text())
+            }
         }
     }
     const linkFormElem = document.getElementById('link-form')
@@ -621,11 +680,17 @@
     const createLinkCollectionBtn = document.getElementById('create-link-collection-btn')
     var collectionFormElem = document.getElementById('collection-form')
     var deleteCollectionForm = document.getElementById('delete-collection-form')
+
+    // link
+    var deleteLinkModalElem = document.getElementById('deleteLinkModal')
+    var deleteLinkFormElem = document.getElementById('delete-link-form')
+    var deleteLinkModal = new bootstrap.Modal(deleteLinkModalElem)
+
     const linkCollectionApi = new LinkCollectionsApi()
     const linkApi = new Linkapi()
     const linkCollectionsView = new LinkCollectionsView()
     const linksView = new LinksContainerView()
-
+    linksView.drawLinks()
 
     var collapseCollectionFormElem = document.getElementById('collapseCollectionForm')
     var collapseCollectionForm = new bootstrap.Collapse(collapseCollectionFormElem, {
