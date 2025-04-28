@@ -86,8 +86,8 @@
     </div>
 </div>
 <div class="container">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {%for link in links%}
+    <div class="row row-cols-1 row-cols-md-4 g-2" id="links-container">
+        <!-- {%for link in links%}
         <div class="col">
             <div class="card h-100">
                 <img src="{{link.image_url}}" class="card-img-top" alt="...">
@@ -96,16 +96,19 @@
                     <p class="card-text">{{link.description}}</p>
                     <p class="card-text">Type: {{link.type}}</p>
                     <p class="card-text">Load status: <span class="badge bg-success">{{link.load_status}}</span></p>
+                    <p class="card-text"><a href="#" class="link-danger">Удалить ссылку</a></p>
+
                     <div>
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 Добавить в колекцию
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                              <li><a class="dropdown-item" href="#">Action</a></li>
-                              <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
                             </ul>
-                          </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -115,11 +118,10 @@
                                 class="collection-cross">X</span></span>
                         {%endfor%}
                     </div>
-                    
                 </div>
             </div>
         </div>
-        {%endfor%}
+        {%endfor%} -->
     </div>
 </div>
 
@@ -489,6 +491,129 @@
         }
     }
 
+    class LinkView {
+        constructor(linkData) {
+            this.data = linkData;
+            this.elem = null
+        }
+
+        createElem() {
+            const col = document.createElement('div');
+            col.className = 'col';
+
+            const card = document.createElement('div');
+            card.className = 'card h-100';
+
+            const img = document.createElement('img');
+            img.className = 'card-img-top';
+            img.src = this.data.image_url;
+            img.alt = this.data.title || '...';
+
+            const cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+
+            const title = document.createElement('h5');
+            title.className = 'card-title';
+            title.textContent = this.data.title;
+
+            const description = document.createElement('p');
+            description.className = 'card-text';
+            description.textContent = this.data.description;
+
+            const type = document.createElement('p');
+            type.className = 'card-text';
+            type.textContent = `Type: ${this.data.type}`;
+
+            const loadStatus = document.createElement('p');
+            loadStatus.className = 'card-text';
+            loadStatus.innerHTML = `Load status: <span class="badge bg-success">${this.data.load_status}</span>`;
+
+            const deleteLink = document.createElement('p');
+            deleteLink.className = 'card-text';
+            const deleteAnchor = document.createElement('a');
+            deleteAnchor.href = '#';
+            deleteAnchor.className = 'link-danger';
+            deleteAnchor.textContent = 'Удалить ссылку';
+            deleteLink.appendChild(deleteAnchor);
+
+            // Dropdown
+            const dropdownWrapper = document.createElement('div');
+            const dropdown = document.createElement('div');
+            dropdown.className = 'dropdown';
+
+            const dropdownButton = document.createElement('button');
+            dropdownButton.className = 'btn btn-secondary dropdown-toggle';
+            dropdownButton.type = 'button';
+            dropdownButton.id = `dropdownMenuButton${this.data.id}`;
+            dropdownButton.setAttribute('data-bs-toggle', 'dropdown');
+            dropdownButton.setAttribute('aria-expanded', 'false');
+            dropdownButton.textContent = 'Добавить в коллекцию';
+
+            const dropdownMenu = document.createElement('ul');
+            dropdownMenu.className = 'dropdown-menu';
+            dropdownMenu.setAttribute('aria-labelledby', dropdownButton.id);
+
+            // Добавляем пункты в выпадающий список
+            this.data.collections.forEach(collection => {
+                const item = document.createElement('li');
+                const link = document.createElement('a');
+                link.className = 'dropdown-item';
+                link.href = '#';
+                link.textContent = collection.name;
+                item.appendChild(link);
+                dropdownMenu.appendChild(item);
+            });
+
+            dropdown.appendChild(dropdownButton);
+            dropdown.appendChild(dropdownMenu);
+            dropdownWrapper.appendChild(dropdown);
+
+            cardBody.append(title, description, type, loadStatus, deleteLink, dropdownWrapper);
+
+            // Footer с коллекциями
+            const cardFooter = document.createElement('div');
+            cardFooter.className = 'card-footer';
+            const small = document.createElement('small');
+            small.className = 'text-muted';
+            small.textContent = 'Колекции:';
+
+            const badgesContainer = document.createElement('div');
+            this.data.collections.forEach(collection => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-secondary me-1'; // чуть отступ
+                badge.innerHTML = `${collection.name} <span class="collection-cross">X</span>`;
+                badgesContainer.appendChild(badge);
+            });
+
+            cardFooter.append(small, badgesContainer);
+
+            // Собираем всю карточку
+            card.append(img, cardBody, cardFooter);
+            col.appendChild(card);
+            this.elem = col
+            return col;
+        }
+    }
+
+
+    class LinksContainerView {
+        constructor() {
+            this.containerElem = document.getElementById('links-container')
+            this.links = new Map()
+        }
+
+        async drawLinks() {
+            var linksData = await linkApi.list()
+            linksData.forEach(linkData => {
+                console.log(linkData)
+                var link = new LinkView(linkData)
+                console.log(link)
+                var linkElem = link.createElem()
+                this.links.set(linkData.id, link)
+                this.containerElem.appendChild(linkElem)
+            })
+        }
+    }
     const linkFormElem = document.getElementById('link-form')
 
     var linkForm = new BsJsonForm(linkFormElem)
@@ -499,6 +624,7 @@
     const linkCollectionApi = new LinkCollectionsApi()
     const linkApi = new Linkapi()
     const linkCollectionsView = new LinkCollectionsView()
+    const linksView = new LinksContainerView()
 
 
     var collapseCollectionFormElem = document.getElementById('collapseCollectionForm')

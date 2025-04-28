@@ -23,7 +23,7 @@ class LinkCollectionSerializer(serializers.ModelSerializer):
 
 
 class LinkReadSerializer(serializers.ModelSerializer):
-    # collections = LinkCollectionSerializer(many=True)
+    collections = LinkCollectionSerializer(many=True)
 
     class Meta:
         model = Link
