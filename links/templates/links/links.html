@@ -314,7 +314,6 @@
             return li
         }
         changeCollectionClickEvent() {
-            console.log('changeCollectionClickEvent')
             var changeForm = new BsJsonForm(collectionFormElem)
             changeForm.feed(this.data)
             changeForm.submitFunction = this.updateEventHandler
@@ -326,7 +325,6 @@
         }
 
         deleteCollectionClickEvent() {
-            console.log('deleteCollectionClickEvent')
             var deleteForm = new BsJsonForm(deleteCollectionForm)
             var data = { 'id': this.data['id'] }
             deleteForm.feed(data)
@@ -493,7 +491,6 @@
             var form = BsJsonForm.getInstance(this.elem)
             var formData = form.toDict()
             formData['collections'] = this._collectionIdsStringToList()
-            console.log(formData)
             var response = await linkApi.create(formData)
             if (response.ok) {
                 console.log(await response.json())
@@ -529,6 +526,50 @@
 
         remove(){
             this.elem.remove()
+        }
+
+        addToCollectionEventHandler(e){
+            var element = e.currentTarget
+            console.log(element, element.dataset.collectionId)
+        }
+
+        addToCollectionClickButtonEvent(){
+            var notLinkCollectionsIds = this._getNotLinkCollectionsIds()
+            var dropDownMenu = this.elem.querySelector('.dropdown-menu')
+            dropDownMenu.innerHTML = ''
+            notLinkCollectionsIds.forEach(collectionId => {
+                var collection = linkCollectionsView.collectionButtons.get(collectionId)
+                const item = document.createElement('li');
+                const link = document.createElement('a');
+                link.className = 'dropdown-item';
+                link.href = '#';
+                link.textContent = collection.data.name;
+                item.appendChild(link);
+                dropDownMenu.appendChild(item);
+                item.dataset.collectionId = collection.data.id
+                item.addEventListener('click', this.addToCollectionEventHandler.bind(this))
+            })
+        }
+        _getNotLinkCollectionsIds(){
+            // получить список колекций в которые не добавлен линк
+            console.log('Current collections', this._currentCollectionsIds())
+            var currentCollectionsIds = this._currentCollectionsIds()
+            var notLinkCollectionsIds = []
+            var collections = linkCollectionsView.collectionButtons
+            collections.forEach(collection => {
+                console.log(collection)
+                if (!currentCollectionsIds.includes(collection.data.id)){
+                    notLinkCollectionsIds.push(collection.data.id)
+                }
+            })
+            return notLinkCollectionsIds
+        }
+        _currentCollectionsIds(){
+            var ids = []
+            this.data.collections.forEach(collectionData => {
+                ids.push(collectionData.id)
+            })
+            return ids
         }
 
         deleteEventClick(e){
@@ -595,16 +636,17 @@
             const dropdownMenu = document.createElement('ul');
             dropdownMenu.className = 'dropdown-menu';
             dropdownMenu.setAttribute('aria-labelledby', dropdownButton.id);
+            dropdownButton.addEventListener('click', this.addToCollectionClickButtonEvent.bind(this))
 
             // Добавляем пункты в выпадающий список
             this.data.collections.forEach(collection => {
-                const item = document.createElement('li');
-                const link = document.createElement('a');
-                link.className = 'dropdown-item';
-                link.href = '#';
-                link.textContent = collection.name;
-                item.appendChild(link);
-                dropdownMenu.appendChild(item);
+                // const item = document.createElement('li');
+                // const link = document.createElement('a');
+                // link.className = 'dropdown-item';
+                // link.href = '#';
+                // link.textContent = collection.name;
+                // item.appendChild(link);
+                // dropdownMenu.appendChild(item);
             });
 
             dropdown.appendChild(dropdownButton);
@@ -648,9 +690,7 @@
         async drawLinks() {
             var linksData = await linkApi.list()
             linksData.forEach(linkData => {
-                console.log(linkData)
                 var link = new LinkView(linkData, this.deleteLinkhandler.bind(this))
-                console.log(link)
                 var linkElem = link.createElem()
                 this.links.set(linkData.id, link)
                 this.containerElem.appendChild(linkElem)
@@ -661,7 +701,6 @@
             e.preventDefault()
             var deleteForm = BsJsonForm.getInstance(deleteLinkFormElem)
             var data = deleteForm.toDict()
-            console.log(data)
             var response = await linkApi.delete(data.id)
             if (response.ok) {
                 deleteLinkModal.hide()
