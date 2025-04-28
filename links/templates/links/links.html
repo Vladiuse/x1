@@ -62,7 +62,6 @@
         </form>
         <hr>
     </div>
-
 </div>
 <div class="container">
     <h3>Мои ссылки</h3>
@@ -92,45 +91,9 @@
 </div>
 <div class="container">
     <div class="row row-cols-1 row-cols-md-4 g-2" id="links-container">
-        <!-- {%for link in links%}
-        <div class="col">
-            <div class="card h-100">
-                <img src="{{link.image_url}}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">{{link.title}}</h5>
-                    <p class="card-text">{{link.description}}</p>
-                    <p class="card-text">Type: {{link.type}}</p>
-                    <p class="card-text">Load status: <span class="badge bg-success">{{link.load_status}}</span></p>
-                    <p class="card-text"><a href="#" class="link-danger">Удалить ссылку</a></p>
 
-                    <div>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Добавить в колекцию
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div><small class="text-muted">Колекции:</small>
-                        {%for collection in link.collections.all%}
-                        <span class="badge bg-secondary">{{collection.name}} <span
-                                class="collection-cross">X</span></span>
-                        {%endfor%}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {%endfor%} -->
     </div>
 </div>
-
-
 
 <!-- DELETE COLLECTION MODAL -->
 <div class="modal fade" id="deleteCollectionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -138,7 +101,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteCollectionModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="deleteCollectionModalLabel">Удаление колекции</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -158,7 +121,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteLinkModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="deleteLinkModalLabel">Удаление ссылки</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -296,17 +259,14 @@
 
         createElem() {
             const collectionData = this.data;
-
             const container = document.createElement('div');
             container.className = 'btn-group';
-
             // Обычная кнопка
             const mainButton = document.createElement('button');
             mainButton.type = 'button';
             mainButton.className = 'btn btn-secondary';
             mainButton.textContent = collectionData.name;
             mainButton.addEventListener('click', this.filterClickEventButton.bind(this))
-
             // Кнопка открытия dropdown
             const toggleButton = document.createElement('button');
             toggleButton.type = 'button';
@@ -315,27 +275,21 @@
             toggleButton.setAttribute('data-bs-toggle', 'dropdown');
             toggleButton.setAttribute('aria-expanded', 'false');
             toggleButton.setAttribute('data-bs-reference', 'parent');
-
             const toggleSpan = document.createElement('span');
             toggleSpan.className = 'visually-hidden';
             toggleSpan.textContent = 'Toggle Dropdown';
             toggleButton.appendChild(toggleSpan);
-
             // Список dropdown
             const ul = document.createElement('ul');
             ul.className = 'dropdown-menu';
             ul.setAttribute('aria-labelledby', toggleButton.id);
-
             const actionLink1 = this._createActionLink('Изменить', this.changeCollectionClickEvent);
             ul.appendChild(actionLink1);
-
             const actionLink2 = this._createActionLink('Удалить', this.deleteCollectionClickEvent);
             ul.appendChild(actionLink2);
-
             container.appendChild(mainButton);
             container.appendChild(toggleButton);
             container.appendChild(ul);
-
             this.elem = container;
             return this.elem;
         }
@@ -370,7 +324,8 @@
             console.log(deleteForm._submitFunction)
             deleteCollectionModal.show()
         }
-        filterClickEventButton(e){
+
+        filterClickEventButton(e) {
             var collectionId = this.data.id
             filterByCollection(collectionId)
         }
@@ -517,8 +472,6 @@
             this._updateChossinCollectionIds()
         }
 
-
-
         _updateChossinCollectionIds() {
             var collectionIds = []
             this.chosenCollectionBlock.querySelectorAll('button').forEach(button => {
@@ -564,11 +517,11 @@
             this.data = linkData;
             this.elem = null
         }
-        show(){
+        show() {
             this.elem.style.display = 'block'
         }
 
-        hide(){
+        hide() {
             this.elem.style.display = 'none'
         }
 
@@ -642,34 +595,26 @@
         createElem() {
             const col = document.createElement('div');
             col.className = 'col';
-
             const card = document.createElement('div');
             card.className = 'card h-100';
-
             const img = document.createElement('img');
             img.className = 'card-img-top';
             img.src = this.data.image_url;
             img.alt = this.data.title || '...';
-
             const cardBody = document.createElement('div');
             cardBody.className = 'card-body';
-
             const title = document.createElement('h5');
             title.className = 'card-title';
             title.textContent = this.data.title;
-
             const description = document.createElement('p');
             description.className = 'card-text';
             description.textContent = this.data.description;
-
             const type = document.createElement('p');
             type.className = 'card-text';
             type.textContent = `Type: ${this.data.type}`;
-
             const loadStatus = document.createElement('p');
             loadStatus.className = 'card-text';
             loadStatus.innerHTML = `Load status: <span class="badge bg-success">${this.data.load_status}</span>`;
-
             const deleteLink = document.createElement('p');
             deleteLink.className = 'card-text';
             const deleteAnchor = document.createElement('a');
@@ -678,12 +623,10 @@
             deleteAnchor.className = 'link-danger';
             deleteAnchor.textContent = 'Удалить ссылку';
             deleteLink.appendChild(deleteAnchor);
-
             // Dropdown
             const dropdownWrapper = document.createElement('div');
             const dropdown = document.createElement('div');
             dropdown.className = 'dropdown';
-
             const dropdownButton = document.createElement('button');
             dropdownButton.className = 'btn btn-secondary dropdown-toggle';
             dropdownButton.type = 'button';
@@ -691,36 +634,24 @@
             dropdownButton.setAttribute('data-bs-toggle', 'dropdown');
             dropdownButton.setAttribute('aria-expanded', 'false');
             dropdownButton.textContent = 'Добавить в коллекцию';
-
             const dropdownMenu = document.createElement('ul');
             dropdownMenu.className = 'dropdown-menu';
             dropdownMenu.setAttribute('aria-labelledby', dropdownButton.id);
             dropdownButton.addEventListener('click', this.addToCollectionClickButtonEvent.bind(this))
-
             // Добавляем пункты в выпадающий список
             this.data.collections.forEach(collection => {
-                // const item = document.createElement('li');
-                // const link = document.createElement('a');
-                // link.className = 'dropdown-item';
-                // link.href = '#';
-                // link.textContent = collection.name;
-                // item.appendChild(link);
-                // dropdownMenu.appendChild(item);
+                //
             });
-
             dropdown.appendChild(dropdownButton);
             dropdown.appendChild(dropdownMenu);
             dropdownWrapper.appendChild(dropdown);
-
             cardBody.append(title, description, type, loadStatus, deleteLink, dropdownWrapper);
-
             // Footer с коллекциями
             const cardFooter = document.createElement('div');
             cardFooter.className = 'card-footer';
             const small = document.createElement('small');
             small.className = 'text-muted';
             small.textContent = 'Колекции:';
-
             const badgesContainer = document.createElement('div');
             this.data.collections.forEach(collection => {
                 const badge = document.createElement('span');
@@ -730,10 +661,7 @@
                 badgesContainer.appendChild(badge);
                 badge.addEventListener('click', this.removeLinkFromCollection.bind(this))
             });
-
-
             cardFooter.append(small, badgesContainer);
-
             // Собираем всю карточку
             card.append(img, cardBody, cardFooter);
             col.appendChild(card);
@@ -784,16 +712,16 @@
         }
 
         filterByCollection(collectionId) {
-            if (collectionId == undefined){
+            if (collectionId == undefined) {
                 for (const [id, link] of this.links) {
                     link.show()
                 }
-                return 
+                return
             }
-            
+
             for (const [id, link] of this.links) {
                 var collectionsIds = link._currentCollectionsIds()
-                if (collectionsIds.includes(collectionId)){
+                if (collectionsIds.includes(collectionId)) {
                     link.show()
                 } else {
                     link.hide()
@@ -802,7 +730,7 @@
         }
     }
 
-    function filterByCollection(collectionId){
+    function filterByCollection(collectionId) {
         var collection = linkCollectionsView.collectionButtons.get(collectionId)
         filterTextLine.querySelector('span').innerHTML = `"${collection.data.name}"`
         var dropFilterButton = document.createElement('button')
@@ -812,28 +740,34 @@
         linksView.filterByCollection(collectionId)
         dropFilterButton.addEventListener('click', dropCollectionFilter)
     }
-    function dropCollectionFilter(){
+    function dropCollectionFilter() {
         filterTextLine.querySelector('span').innerHTML = `"Все"`
         linksView.filterByCollection()
     }
-    const linkFormElem = document.getElementById('link-form')
     var filterTextLine = document.getElementById('filter-text-line')
-    var linkForm = new BsJsonForm(linkFormElem)
-    var linkContainerCollapseElem = document.getElementById('link-container-form')
+
+    // collections
     const createLinkCollectionBtn = document.getElementById('create-link-collection-btn')
     var collectionFormElem = document.getElementById('collection-form')
     var deleteCollectionForm = document.getElementById('delete-collection-form')
+    const deleteCollectionModalElem = document.getElementById('deleteCollectionModal')
+    const deleteCollectionModal = new bootstrap.Modal(deleteCollectionModalElem)
 
     // link
     var deleteLinkModalElem = document.getElementById('deleteLinkModal')
     var deleteLinkFormElem = document.getElementById('delete-link-form')
     var deleteLinkModal = new bootstrap.Modal(deleteLinkModalElem)
+    var linkContainerCollapseElem = document.getElementById('link-container-form')
+    const linkFormElem = document.getElementById('link-form')
+    var linkForm = new BsJsonForm(linkFormElem)
+
 
     const linkCollectionApi = new LinkCollectionsApi()
     const linkApi = new Linkapi()
     const linkCollectionManagerApi = new LinkCollectionManagerApi()
     const linkCollectionsView = new LinkCollectionsView()
     const linksView = new LinksContainerView()
+
     linksView.drawLinks()
 
     var collapseCollectionFormElem = document.getElementById('collapseCollectionForm')
@@ -847,12 +781,8 @@
         collapseCreateLinkForm.toggle()
     })
 
-    const deleteCollectionModalElem = document.getElementById('deleteCollectionModal')
-    const deleteCollectionModal = new bootstrap.Modal(deleteCollectionModalElem)
-
     createLinkCollectionBtn.addEventListener('click', linkCollectionsView.createLinkCollectionEventClick.bind(linkCollectionsView))
     linkCollectionsView.drawButtons()
-
     const createLinkForm = new CreateLinkForm(linkCollectionsView)
 </script>
 {%endblock%}
