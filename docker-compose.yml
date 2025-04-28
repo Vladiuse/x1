@@ -7,7 +7,7 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_DBNAME}
     ports:
-      - "15432:5432"
+      - "5432:5432"
   link_hub:
     build:
       context: .
@@ -17,3 +17,13 @@ services:
       - postgres
     environment:
       DEBUG: "False"
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - link_hub
