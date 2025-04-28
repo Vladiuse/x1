@@ -205,6 +205,38 @@
             return await response
         }
     }
+    class LinkCollectionManagerApi{
+        constructor(){
+
+        }
+        async addLinkToCollection(collectionId, linkId){
+            var url = "{%url 'links:link_collection_manager'%}"
+            var data = {
+                'collection_id': collectionId,
+                'link_id': linkId,
+            }
+            var response = await fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            return response
+
+        }
+        async removeLinkFromCollection(collectionId, linkId){
+            var url = "{%url 'links:link_collection_manager'%}"
+            var data = {
+                'collection_id': collectionId,
+                'link_id': linkId,
+            }
+            var response = await fetch(url, {
+                method: 'DELETE',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            return response
+        }
+    }
     class LinkCollectionsApi {
         constructor() {
 
@@ -528,9 +560,13 @@
             this.elem.remove()
         }
 
-        addToCollectionEventHandler(e){
+        async addToCollectionEventHandler(e){
             var element = e.currentTarget
-            console.log(element, element.dataset.collectionId)
+            var collectionId = element.dataset.collectionId
+            var linkId = this.data.id
+            var response = await linkCollectionManagerApi.addLinkToCollection(collectionId, linkId)
+            var linkData = await response.json()
+            linksView.updateLink(linkData)
         }
 
         addToCollectionClickButtonEvent(){
@@ -552,12 +588,10 @@
         }
         _getNotLinkCollectionsIds(){
             // получить список колекций в которые не добавлен линк
-            console.log('Current collections', this._currentCollectionsIds())
             var currentCollectionsIds = this._currentCollectionsIds()
             var notLinkCollectionsIds = []
             var collections = linkCollectionsView.collectionButtons
             collections.forEach(collection => {
-                console.log(collection)
                 if (!currentCollectionsIds.includes(collection.data.id)){
                     notLinkCollectionsIds.push(collection.data.id)
                 }
@@ -711,6 +745,14 @@
                 alert(await response.text())
             }
         }
+
+        updateLink(linkData){
+            var link = new LinkView(linkData, this.deleteLinkhandler.bind(this))
+            var linkElem = link.createElem()
+            var oldLink = this.links.get(linkData.id)
+            this.links.delete(linkData.id)
+            oldLink.elem.replaceWith(linkElem)
+        }
     }
     const linkFormElem = document.getElementById('link-form')
 
@@ -727,6 +769,7 @@
 
     const linkCollectionApi = new LinkCollectionsApi()
     const linkApi = new Linkapi()
+    const linkCollectionManagerApi = new LinkCollectionManagerApi()
     const linkCollectionsView = new LinkCollectionsView()
     const linksView = new LinksContainerView()
     linksView.drawLinks()
