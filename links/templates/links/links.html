@@ -19,12 +19,14 @@
         gap: 10px;
     }
 
-    #collection-to-chose,#chosen-collections{
+    #collection-to-chose,
+    #chosen-collections {
         display: flex;
         flex-wrap: wrap;
         gap: 5px;
     }
-    .collection-cross{
+
+    .collection-cross {
         color: red;
         font-weight: 900;
         margin: 0 5px;
@@ -56,7 +58,7 @@
         </form>
         <hr>
     </div>
-    
+
 </div>
 <div class="container">
     <h3>Мои ссылки</h3>
@@ -64,9 +66,9 @@
     <div id="link-container-form" class="collapse">
         <form action="" id="link-form">
             <div class="mb-3">
-                <label  class="form-label">Выберете колекции</label>
+                <label class="form-label">Выберете колекции</label>
                 <div id="collection-to-chose"></div>
-                <label  class="form-label">выбранные колекции</label>
+                <label class="form-label">выбранные колекции</label>
                 <div id="chosen-collections"></div>
             </div>
             <div class="mb-3">
@@ -83,6 +85,44 @@
         <hr>
     </div>
 </div>
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {%for link in links%}
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{link.image_url}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{link.title}}</h5>
+                    <p class="card-text">{{link.description}}</p>
+                    <p class="card-text">Type: {{link.type}}</p>
+                    <p class="card-text">Load status: <span class="badge bg-success">{{link.load_status}}</span></p>
+                    <div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Добавить в колекцию
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                              <li><a class="dropdown-item" href="#">Action</a></li>
+                              <li><a class="dropdown-item" href="#">Another action</a></li>
+                            </ul>
+                          </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div><small class="text-muted">Колекции:</small>
+                        {%for collection in link.collections.all%}
+                        <span class="badge bg-secondary">{{collection.name}} <span
+                                class="collection-cross">X</span></span>
+                        {%endfor%}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+
 
 
 <!-- DELETE COLLECTION MODAL -->
@@ -110,8 +150,8 @@
         "Content-Type": "application/json",
         "X-CSRFToken": csrf,
     }
-    class Linkapi{
-        constructor(){
+    class Linkapi {
+        constructor() {
 
         }
 
@@ -124,7 +164,7 @@
             return await response.json()
         }
 
-        async create(linkData){
+        async create(linkData) {
             var url = "{%url 'links:userlinks-list'%}"
             var response = await fetch(url, {
                 method: 'POST',
@@ -387,10 +427,10 @@
             });
         }
 
-        clickCollectionButtonEvent(e){
+        clickCollectionButtonEvent(e) {
             var button = e.currentTarget
             var parrent = button.parentElement
-            if (parrent.id == 'collection-to-chose'){
+            if (parrent.id == 'collection-to-chose') {
                 this.chosenCollectionBlock.appendChild(button)
                 button.classList.remove('btn-secondary')
                 button.classList.add('btn-primary')
@@ -407,17 +447,17 @@
             this._updateChossinCollectionIds()
         }
 
-        
 
-        _updateChossinCollectionIds(){
+
+        _updateChossinCollectionIds() {
             var collectionIds = []
             this.chosenCollectionBlock.querySelectorAll('button').forEach(button => {
-                collectionIds.push( button.dataset.collectionId)
+                collectionIds.push(button.dataset.collectionId)
             })
             this.collectionIdsInput.value = collectionIds.join(',')
         }
 
-        async createLinkEvent(e){
+        async createLinkEvent(e) {
             e.preventDefault()
             var form = BsJsonForm.getInstance(this.elem)
             var formData = form.toDict()
@@ -433,14 +473,14 @@
                 form.showErrors(responseData)
             }
         }
-        _collectionIdsStringToList(){
-            if (this.collectionIdsInput.value == ""){
+        _collectionIdsStringToList() {
+            if (this.collectionIdsInput.value == "") {
                 return []
             }
             return this.collectionIdsInput.value.split(',')
         }
 
-        _resetForm(){
+        _resetForm() {
             this.chosenCollectionBlock.querySelectorAll('button').forEach(button => {
                 button.click()
             })
@@ -450,7 +490,7 @@
     }
 
     const linkFormElem = document.getElementById('link-form')
-    
+
     var linkForm = new BsJsonForm(linkFormElem)
     var linkContainerCollapseElem = document.getElementById('link-container-form')
     const createLinkCollectionBtn = document.getElementById('create-link-collection-btn')
@@ -468,7 +508,7 @@
     var collapseCreateLinkForm = new bootstrap.Collapse(linkContainerCollapseElem, {
         toggle: false
     })
-    document.getElementById('create-link-btn').addEventListener('click', function(){
+    document.getElementById('create-link-btn').addEventListener('click', function () {
         collapseCreateLinkForm.toggle()
     })
 
