@@ -31,7 +31,8 @@
         font-weight: 900;
         margin: 0 5px;
     }
-    .card .badge{
+
+    .card .badge {
         cursor: pointer;
     }
 </style>
@@ -66,6 +67,7 @@
 <div class="container">
     <h3>Мои ссылки</h3>
     <button class="btn btn-primary" id="create-link-btn">+ создать ссылку</button>
+    <p id="filter-text-line">Показаны ссылки колекции: <span>Все</span></p>
     <div id="link-container-form" class="collapse">
         <form action="" id="link-form">
             <div class="mb-3">
@@ -199,7 +201,7 @@
             return response
         }
 
-        async delete(linkId){
+        async delete(linkId) {
             var url = "{%url 'links:userlinks-list'%}" + linkId + '/'
             var response = await fetch(url, {
                 method: 'DELETE',
@@ -208,11 +210,11 @@
             return await response
         }
     }
-    class LinkCollectionManagerApi{
-        constructor(){
+    class LinkCollectionManagerApi {
+        constructor() {
 
         }
-        async addLinkToCollection(collectionId, linkId){
+        async addLinkToCollection(collectionId, linkId) {
             var url = "{%url 'links:link_collection_manager'%}"
             var data = {
                 'collection_id': collectionId,
@@ -226,7 +228,7 @@
             return response
 
         }
-        async removeLinkFromCollection(collectionId, linkId){
+        async removeLinkFromCollection(collectionId, linkId) {
             var url = "{%url 'links:link_collection_manager'%}"
             var data = {
                 'collection_id': collectionId,
@@ -303,6 +305,7 @@
             mainButton.type = 'button';
             mainButton.className = 'btn btn-secondary';
             mainButton.textContent = collectionData.name;
+            mainButton.addEventListener('click', this.filterClickEventButton.bind(this))
 
             // Кнопка открытия dropdown
             const toggleButton = document.createElement('button');
@@ -367,7 +370,10 @@
             console.log(deleteForm._submitFunction)
             deleteCollectionModal.show()
         }
-
+        filterClickEventButton(e){
+            var collectionId = this.data.id
+            filterByCollection(collectionId)
+        }
     }
 
     class LinkCollectionsView {
@@ -558,12 +564,19 @@
             this.data = linkData;
             this.elem = null
         }
+        show(){
+            this.elem.style.display = 'block'
+        }
 
-        remove(){
+        hide(){
+            this.elem.style.display = 'none'
+        }
+
+        remove() {
             this.elem.remove()
         }
 
-        async removeLinkFromCollection(e){
+        async removeLinkFromCollection(e) {
             var collectionBadge = e.currentTarget
             var collectionId = collectionBadge.dataset.collectionId
             var linkId = this.data.id
@@ -572,7 +585,7 @@
             linksView.updateLink(linkData)
         }
 
-        async addToCollectionEventHandler(e){
+        async addToCollectionEventHandler(e) {
             var element = e.currentTarget
             var collectionId = element.dataset.collectionId
             var linkId = this.data.id
@@ -581,7 +594,7 @@
             linksView.updateLink(linkData)
         }
 
-        addToCollectionClickButtonEvent(){
+        addToCollectionClickButtonEvent() {
             var notLinkCollectionsIds = this._getNotLinkCollectionsIds()
             var dropDownMenu = this.elem.querySelector('.dropdown-menu')
             dropDownMenu.innerHTML = ''
@@ -598,19 +611,19 @@
                 item.addEventListener('click', this.addToCollectionEventHandler.bind(this))
             })
         }
-        _getNotLinkCollectionsIds(){
+        _getNotLinkCollectionsIds() {
             // получить список колекций в которые не добавлен линк
             var currentCollectionsIds = this._currentCollectionsIds()
             var notLinkCollectionsIds = []
             var collections = linkCollectionsView.collectionButtons
             collections.forEach(collection => {
-                if (!currentCollectionsIds.includes(collection.data.id)){
+                if (!currentCollectionsIds.includes(collection.data.id)) {
                     notLinkCollectionsIds.push(collection.data.id)
                 }
             })
             return notLinkCollectionsIds
         }
-        _currentCollectionsIds(){
+        _currentCollectionsIds() {
             var ids = []
             this.data.collections.forEach(collectionData => {
                 ids.push(collectionData.id)
@@ -618,7 +631,7 @@
             return ids
         }
 
-        deleteEventClick(e){
+        deleteEventClick(e) {
             e.preventDefault()
             var deleteForm = new BsJsonForm(deleteLinkFormElem)
             deleteForm.feed(this.data)
@@ -746,7 +759,7 @@
             })
         }
 
-        async deleteLinkhandler(e){
+        async deleteLinkhandler(e) {
             e.preventDefault()
             var deleteForm = BsJsonForm.getInstance(deleteLinkFormElem)
             var data = deleteForm.toDict()
@@ -761,7 +774,7 @@
             }
         }
 
-        updateLink(linkData){
+        updateLink(linkData) {
             var link = new LinkView(linkData, this.deleteLinkhandler.bind(this))
             var linkElem = link.createElem()
             var oldLink = this.links.get(linkData.id)
@@ -769,9 +782,42 @@
             oldLink.elem.replaceWith(linkElem)
             this.links.set(linkData.id, link)
         }
+
+        filterByCollection(collectionId) {
+            if (collectionId == undefined){
+                for (const [id, link] of this.links) {
+                    link.show()
+                }
+                return 
+            }
+            
+            for (const [id, link] of this.links) {
+                var collectionsIds = link._currentCollectionsIds()
+                if (collectionsIds.includes(collectionId)){
+                    link.show()
+                } else {
+                    link.hide()
+                }
+            }
+        }
+    }
+
+    function filterByCollection(collectionId){
+        var collection = linkCollectionsView.collectionButtons.get(collectionId)
+        filterTextLine.querySelector('span').innerHTML = `"${collection.data.name}"`
+        var dropFilterButton = document.createElement('button')
+        dropFilterButton.classList.add('btn', 'btn-secondary')
+        dropFilterButton.innerText = `Стробить фильтр`
+        filterTextLine.querySelector('span').appendChild(dropFilterButton)
+        linksView.filterByCollection(collectionId)
+        dropFilterButton.addEventListener('click', dropCollectionFilter)
+    }
+    function dropCollectionFilter(){
+        filterTextLine.querySelector('span').innerHTML = `"Все"`
+        linksView.filterByCollection()
     }
     const linkFormElem = document.getElementById('link-form')
-
+    var filterTextLine = document.getElementById('filter-text-line')
     var linkForm = new BsJsonForm(linkFormElem)
     var linkContainerCollapseElem = document.getElementById('link-container-form')
     const createLinkCollectionBtn = document.getElementById('create-link-collection-btn')
