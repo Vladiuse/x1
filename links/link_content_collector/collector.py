@@ -16,15 +16,19 @@ class LinkContentCollector:
     def collect(self, link: Link, attempts: int = 2) -> Link:
         try:
             page_content = self._page_link_content(url=link.url, attempts=attempts)
-            link.url = page_content.url
-            link.title = page_content.title
-            link.description = page_content.description
-            link.type = page_content.type
-            link.image_url = page_content.image
-            link.load_status = Link.LOAD_STATUS_LOADED
+            Link.objects.filter(pk=link.pk).update(
+                url=page_content.url,
+                title=page_content.title,
+                description=page_content.description,
+                type=page_content.type,
+                image_url=page_content.image,
+                load_status=Link.LOAD_STATUS_LOADED,
+            )
         except CantGetPageContent:
-            link.load_status = Link.LOAD_STATUS_ERROR
-        link.save()
+            Link.objects.filter(pk=link.pk).update(
+
+                load_status=Link.LOAD_STATUS_ERROR,
+            )
         return link
 
     def _page_link_content(self, url: str, attempts: int) -> PageContent:
