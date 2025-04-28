@@ -38,6 +38,27 @@
     </div>
 </div>
 <div class="container">
+    <div class="collapse" id="collapseCollectionForm">
+        <form action="" id="collection-form">
+            <div class="invalid-feedback non-field-invalid-feedback"></div>
+            <input type="hidden" class="form-control" required name="id">
+            <div class="mb-3">
+                <label for="collection-name" class="form-label">Название</label>
+                <input type="text" class="form-control" id="collection-name" required name="name">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="mb-3">
+                <label for="collection-description" class="form-label">Описание</label>
+                <input type="text" class="form-control" id="collection-description" name="description">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="mb-3"><button type="submit" class="btn btn-primary">Сохранить</button></div>
+        </form>
+        <hr>
+    </div>
+    
+</div>
+<div class="container">
     <h3>Мои ссылки</h3>
     <button class="btn btn-primary" id="create-link-btn">+ создать ссылку</button>
     <div id="link-container-form" class="collapse">
@@ -59,27 +80,10 @@
             </div>
             <div class="mb-3"><button type="submit" class="btn btn-primary">Создать ссылку</button></div>
         </form>
+        <hr>
     </div>
 </div>
-<div class="container">
-    <div class="collapse" id="collapseCollectionForm">
-        <form action="" id="collection-form">
-            <div class="invalid-feedback non-field-invalid-feedback"></div>
-            <input type="hidden" class="form-control" required name="id">
-            <div class="mb-3">
-                <label for="collection-name" class="form-label">Название</label>
-                <input type="text" class="form-control" id="collection-name" required name="name">
-                <div class="invalid-feedback"></div>
-            </div>
-            <div class="mb-3">
-                <label for="collection-description" class="form-label">Описание</label>
-                <input type="text" class="form-control" id="collection-description" name="description">
-                <div class="invalid-feedback"></div>
-            </div>
-            <div class="mb-3"><button type="submit" class="btn btn-primary">Сохранить</button></div>
-        </form>
-    </div>
-</div>
+
 
 <!-- DELETE COLLECTION MODAL -->
 <div class="modal fade" id="deleteCollectionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -109,6 +113,15 @@
     class Linkapi{
         constructor(){
 
+        }
+
+        async list() {
+            var url = "{%url 'links:userlinks-list'%}"
+            var response = await fetch(url, {
+                method: 'GET',
+                headers: headers,
+            })
+            return await response.json()
         }
 
         async create(linkData){
@@ -278,7 +291,7 @@
         }
 
         createLinkCollectionEventClick() {
-            collapseCollectionForm.show()
+            collapseCollectionForm.toggle()
             var form = new BsJsonForm(collectionFormElem)
             form.submitFunction = this.createLinkCollectionHandler.bind(this)
         }
@@ -428,11 +441,11 @@
         }
 
         _resetForm(){
-            this.collectionIdsInput.value = ''
-            this.collectionUrlInput.value = ''
             this.chosenCollectionBlock.querySelectorAll('button').forEach(button => {
                 button.click()
             })
+            this.collectionIdsInput.value = ''
+            this.collectionUrlInput.value = ''
         }
     }
 
