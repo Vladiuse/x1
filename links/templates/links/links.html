@@ -18,9 +18,48 @@
         flex-wrap: wrap;
         gap: 10px;
     }
+
+    #collection-to-chose,#chosen-collections{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    .collection-cross{
+        color: red;
+        font-weight: 900;
+        margin: 0 5px;
+    }
 </style>
-<div class="container" id="link-collection-container">
-    <button class="btn btn-primary" id="create-link-collection-btn">+ создать колекцию</button>
+
+<div class="container mb-3">
+    <h3>Мои колекции</h3>
+    <div id="link-collection-container">
+        <button class="btn btn-primary" id="create-link-collection-btn">+ создать колекцию</button>
+    </div>
+</div>
+<div class="container">
+    <h3>Мои ссылки</h3>
+    <button class="btn btn-primary" id="create-link-btn">+ создать ссылку</button>
+    <div id="link-container-form" class="collapse">
+        <form action="" id="link-form">
+            <div class="mb-3">
+                <label  class="form-label">Выберете колекции</label>
+                <div id="collection-to-chose"></div>
+                <label  class="form-label">выбранные колекции</label>
+                <div id="chosen-collections"></div>
+            </div>
+            <div class="mb-3">
+                <input type="text" name="collections">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="mb-3">
+                <label for="url" class="form-label">Url</label>
+                <input type="text" class="form-control" id="url" required name="url">
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="mb-3"><button type="submit" class="btn btn-primary">Создать ссылку</button></div>
+        </form>
+    </div>
 </div>
 <div class="container">
     <div class="collapse" id="collapseCollectionForm">
@@ -34,7 +73,7 @@
             </div>
             <div class="mb-3">
                 <label for="collection-description" class="form-label">Описание</label>
-                <input type="text" class="form-control" id="collection-description" required name="description">
+                <input type="text" class="form-control" id="collection-description" name="description">
                 <div class="invalid-feedback"></div>
             </div>
             <div class="mb-3"><button type="submit" class="btn btn-primary">Сохранить</button></div>
@@ -66,6 +105,21 @@
     var headers = {
         "Content-Type": "application/json",
         "X-CSRFToken": csrf,
+    }
+    class Linkapi{
+        constructor(){
+
+        }
+
+        async create(linkData){
+            var url = "{%url 'links:userlinks-list'%}"
+            var response = await fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(linkData)
+            })
+            return response
+        }
     }
     class LinkCollectionsApi {
         constructor() {
@@ -207,7 +261,6 @@
 
         async drawButtons() {
             var buttonsData = await linkCollectionApi.list()
-            console.log(buttonsData)
             buttonsData.forEach(collectionData => {
                 this._drawButton(collectionData)
             })
@@ -287,10 +340,111 @@
         }
 
     }
+
+    class CreateLinkForm {
+        constructor(linkView) {
+            this.elem = linkFormElem
+            this.collectionIdsInput = this.elem.querySelector('input[name=collections]')
+            this.collectionUrlInput = this.elem.querySelector('input[name=url]')
+            this.collectionToChoseBlock = document.getElementById('collection-to-chose')
+            this.chosenCollectionBlock = document.getElementById('chosen-collections')
+            this.linkView = linkView
+
+            this._init_()
+        }
+
+        _init_() {
+            this.collectionToChoseBlock.innerHTML = '';
+            this.chosenCollectionBlock.innerHTML = '';
+            this._drawCollectionButtons()
+            var form = new BsJsonForm(this.elem)
+            form.submitFunction = this.createLinkEvent.bind(this)
+        }
+
+        async _drawCollectionButtons() {
+            var buttonsData = await linkCollectionApi.list()
+            buttonsData.forEach((value, key) => {
+                var collectionButton = document.createElement('button')
+                collectionButton.dataset.collectionId = value['id']
+                collectionButton.classList.add('btn', 'btn-secondary')
+                collectionButton.setAttribute('type', 'button');
+                collectionButton.innerText = value['name']
+                this.collectionToChoseBlock.appendChild(collectionButton)
+                collectionButton.addEventListener('click', (e) => this.clickCollectionButtonEvent(e));
+            });
+        }
+
+        clickCollectionButtonEvent(e){
+            var button = e.currentTarget
+            var parrent = button.parentElement
+            if (parrent.id == 'collection-to-chose'){
+                this.chosenCollectionBlock.appendChild(button)
+                button.classList.remove('btn-secondary')
+                button.classList.add('btn-primary')
+                var crosSpan = document.createElement('span')
+                crosSpan.innerText = 'X'
+                crosSpan.classList.add('collection-cross')
+                button.appendChild(crosSpan)
+            } else {
+                this.collectionToChoseBlock.appendChild(button)
+                button.classList.remove('btn-primary')
+                button.classList.add('btn-secondary')
+                button.querySelector('span').remove()
+            }
+            this._updateChossinCollectionIds()
+        }
+
+        
+
+        _updateChossinCollectionIds(){
+            var collectionIds = []
+            this.chosenCollectionBlock.querySelectorAll('button').forEach(button => {
+                collectionIds.push( button.dataset.collectionId)
+            })
+            this.collectionIdsInput.value = collectionIds.join(',')
+        }
+
+        async createLinkEvent(e){
+            e.preventDefault()
+            var form = BsJsonForm.getInstance(this.elem)
+            var formData = form.toDict()
+            formData['collections'] = this._collectionIdsStringToList()
+            console.log(formData)
+            var response = await linkApi.create(formData)
+            if (response.ok) {
+                console.log(await response.json())
+                this._resetForm()
+                collapseCreateLinkForm.hide()
+            } else {
+                var responseData = await response.json()
+                form.showErrors(responseData)
+            }
+        }
+        _collectionIdsStringToList(){
+            if (this.collectionIdsInput.value == ""){
+                return []
+            }
+            return this.collectionIdsInput.value.split(',')
+        }
+
+        _resetForm(){
+            this.collectionIdsInput.value = ''
+            this.collectionUrlInput.value = ''
+            this.chosenCollectionBlock.querySelectorAll('button').forEach(button => {
+                button.click()
+            })
+        }
+    }
+
+    const linkFormElem = document.getElementById('link-form')
+    
+    var linkForm = new BsJsonForm(linkFormElem)
+    var linkContainerCollapseElem = document.getElementById('link-container-form')
     const createLinkCollectionBtn = document.getElementById('create-link-collection-btn')
     var collectionFormElem = document.getElementById('collection-form')
     var deleteCollectionForm = document.getElementById('delete-collection-form')
     const linkCollectionApi = new LinkCollectionsApi()
+    const linkApi = new Linkapi()
     const linkCollectionsView = new LinkCollectionsView()
 
 
@@ -298,11 +452,19 @@
     var collapseCollectionForm = new bootstrap.Collapse(collapseCollectionFormElem, {
         toggle: false
     })
+    var collapseCreateLinkForm = new bootstrap.Collapse(linkContainerCollapseElem, {
+        toggle: false
+    })
+    document.getElementById('create-link-btn').addEventListener('click', function(){
+        collapseCreateLinkForm.toggle()
+    })
 
     const deleteCollectionModalElem = document.getElementById('deleteCollectionModal')
     const deleteCollectionModal = new bootstrap.Modal(deleteCollectionModalElem)
 
     createLinkCollectionBtn.addEventListener('click', linkCollectionsView.createLinkCollectionEventClick.bind(linkCollectionsView))
     linkCollectionsView.drawButtons()
+
+    const createLinkForm = new CreateLinkForm(linkCollectionsView)
 </script>
 {%endblock%}
