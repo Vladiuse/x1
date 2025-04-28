@@ -19,9 +19,8 @@
         gap: 10px;
     }
 </style>
-<h1>links</h1>
 <div class="container" id="link-collection-container">
-    <button class="btn btn-primary" id="create-link-collection-btn">+ создать</button>
+    <button class="btn btn-primary" id="create-link-collection-btn">+ создать колекцию</button>
 </div>
 <div class="container">
     <div class="collapse" id="collapseCollectionForm">
@@ -55,7 +54,7 @@
             <div class="modal-body">
                 <form action="" id="delete-collection-form">
                     <div class="invalid-feedback non-field-invalid-feedback"></div>
-                    <input type="text" class="form-control" required name="id">
+                    <input type="hidden" class="form-control" required name="id">
                     <button type="submit" class="btn btn-primary">Удалить</button>
                 </form>
             </div>
@@ -121,32 +120,50 @@
         }
 
         createElem() {
-            var collectionData = this.data
+            const collectionData = this.data;
+
             const container = document.createElement('div');
-            container.className = 'dropdown';
+            container.className = 'btn-group';
 
-            const button = document.createElement('button');
-            button.className = 'btn btn-secondary dropdown-toggle';
-            button.type = 'button';
-            button.id = `dropdownMenuButton-${collectionData.id}`;
-            button.setAttribute('data-bs-toggle', 'dropdown');
-            button.setAttribute('aria-expanded', 'false');
-            button.textContent = collectionData.name;
+            // Обычная кнопка
+            const mainButton = document.createElement('button');
+            mainButton.type = 'button';
+            mainButton.className = 'btn btn-secondary';
+            mainButton.textContent = collectionData.name;
 
+            // Кнопка открытия dropdown
+            const toggleButton = document.createElement('button');
+            toggleButton.type = 'button';
+            toggleButton.className = 'btn btn-secondary dropdown-toggle dropdown-toggle-split';
+            toggleButton.id = `dropdownMenuButton-${collectionData.id}`;
+            toggleButton.setAttribute('data-bs-toggle', 'dropdown');
+            toggleButton.setAttribute('aria-expanded', 'false');
+            toggleButton.setAttribute('data-bs-reference', 'parent');
+
+            const toggleSpan = document.createElement('span');
+            toggleSpan.className = 'visually-hidden';
+            toggleSpan.textContent = 'Toggle Dropdown';
+            toggleButton.appendChild(toggleSpan);
+
+            // Список dropdown
             const ul = document.createElement('ul');
             ul.className = 'dropdown-menu';
-            ul.setAttribute('aria-labelledby', button.id);
-            var actionLink = this._createActionLink('Изменить', this.changeCollectionClickEvent)
-            ul.appendChild(actionLink);
-            var actionLink = this._createActionLink('Удалить', this.deleteCollectionClickEvent)
-            ul.appendChild(actionLink);
+            ul.setAttribute('aria-labelledby', toggleButton.id);
 
+            const actionLink1 = this._createActionLink('Изменить', this.changeCollectionClickEvent);
+            ul.appendChild(actionLink1);
 
-            container.appendChild(button);
+            const actionLink2 = this._createActionLink('Удалить', this.deleteCollectionClickEvent);
+            ul.appendChild(actionLink2);
+
+            container.appendChild(mainButton);
+            container.appendChild(toggleButton);
             container.appendChild(ul);
-            this.elem = container
-            return this.elem
+
+            this.elem = container;
+            return this.elem;
         }
+
 
         _createActionLink(text, clickFunction) {
             const li = document.createElement('li');
@@ -192,7 +209,6 @@
             var buttonsData = await linkCollectionApi.list()
             console.log(buttonsData)
             buttonsData.forEach(collectionData => {
-                
                 this._drawButton(collectionData)
             })
         }
