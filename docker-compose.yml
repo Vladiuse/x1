@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DBNAME}
+    ports:
+      - "15432:5432"
+  link_hub:
+    build:
+      context: .
+    ports:
+      - "8008:8000"
+    depends_on:
+      - postgres
+    environment:
+      DEBUG: "False"
