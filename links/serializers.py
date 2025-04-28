@@ -57,3 +57,26 @@ class LinkCreateSerializer(serializers.ModelSerializer):
                 fields=['owner', 'url'],
             ),
         ]
+
+
+class LinkCollectionManagerSerializer(serializers.Serializer):
+    collection_id = serializers.IntegerField()
+    link_id = serializers.IntegerField()
+
+    # def create(self, validated_data: dict) -> Link:
+    #     link = Link.objects.get(pk=validated_data['link_id'])
+    #     collection = LinkCollection.objects.get(pk=validated_data['collection_id'])
+    #     link.collections.add(collection)
+    #     return link
+
+    def validate_collection_id(self, value: int) -> int:
+        user = self.context['request'].user
+        if not LinkCollection.objects.filter(owner=user, pk=value).exists():
+            raise ValidationError('You not owner of this collection')
+        return value
+
+    def validate_link_id(self, value: int) -> int:
+        user = self.context['request'].user
+        if not Link.objects.filter(owner=user, pk=value).exists():
+            raise ValidationError('You not owner of this link')
+        return value

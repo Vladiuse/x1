@@ -1,3 +1,4 @@
+from rest_framework.views import APIView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +8,7 @@ from common.request_sender import RequestSender
 from rest_framework.response import Response
 
 from .models import Link, LinkCollection
-from .serializers import LinkCollectionSerializer, LinkCreateSerializer, LinkReadSerializer
+from .serializers import LinkCollectionSerializer, LinkCreateSerializer, LinkReadSerializer, LinkCollectionManagerSerializer
 
 link_content_converter = LinkContentCollector(
     request_sender=RequestSender(),
@@ -50,3 +51,26 @@ class LinkCollectionView(ModelViewSet):
 
     def get_queryset(self):
         return LinkCollection.objects.filter(owner=self.request.user)
+
+
+class LinkCollectionManagerView(APIView):
+
+
+    def post(self, request, format=None): # noqa: A002
+        link, collection = self._get_link_and_collection(request=request)
+        link.collections.add(collection)
+        serializer = LinkReadSerializer(link)
+        return Response(serializer.data)
+
+    def delete(self, request, format=None): # noqa: A002)
+        link, collection = self._get_link_and_collection(request=request)
+        link.collections.remove(collection)
+        serializer = LinkReadSerializer(link)
+        return Response(serializer.data)
+
+    def _get_link_and_collection(self, request) -> tuple[Link, LinkCollection]:
+        serializer = LinkCollectionManagerSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        link = Link.objects.get(pk=serializer.validated_data['link_id'])
+        collection = LinkCollection.objects.get(pk=serializer.validated_data['collection_id'])
+        return link, collection
