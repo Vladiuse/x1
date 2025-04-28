@@ -31,6 +31,9 @@
         font-weight: 900;
         margin: 0 5px;
     }
+    .card .badge{
+        cursor: pointer;
+    }
 </style>
 
 <div class="container mb-3">
@@ -560,6 +563,15 @@
             this.elem.remove()
         }
 
+        async removeLinkFromCollection(e){
+            var collectionBadge = e.currentTarget
+            var collectionId = collectionBadge.dataset.collectionId
+            var linkId = this.data.id
+            var response = await linkCollectionManagerApi.removeLinkFromCollection(collectionId, linkId)
+            var linkData = await response.json()
+            linksView.updateLink(linkData)
+        }
+
         async addToCollectionEventHandler(e){
             var element = e.currentTarget
             var collectionId = element.dataset.collectionId
@@ -701,8 +713,11 @@
                 const badge = document.createElement('span');
                 badge.className = 'badge bg-secondary me-1'; // чуть отступ
                 badge.innerHTML = `${collection.name} <span class="collection-cross">X</span>`;
+                badge.dataset.collectionId = collection.id
                 badgesContainer.appendChild(badge);
+                badge.addEventListener('click', this.removeLinkFromCollection.bind(this))
             });
+
 
             cardFooter.append(small, badgesContainer);
 
@@ -752,6 +767,7 @@
             var oldLink = this.links.get(linkData.id)
             this.links.delete(linkData.id)
             oldLink.elem.replaceWith(linkElem)
+            this.links.set(linkData.id, link)
         }
     }
     const linkFormElem = document.getElementById('link-form')
