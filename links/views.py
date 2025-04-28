@@ -2,11 +2,17 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
+from links.link_content_collector import LinkContentCollector, Converter
+from common.request_sender import RequestSender
+from rest_framework.response import Response
 
 from .models import Link, LinkCollection
 from .serializers import LinkCollectionSerializer, LinkCreateSerializer, LinkReadSerializer
 
-
+link_content_converter = LinkContentCollector(
+    request_sender=RequestSender(),
+    converter=Converter(),
+)
 @login_required
 def index(request):
     links = Link.objects.filter(owner=request.user)
@@ -27,6 +33,15 @@ class UserLinksView(ModelViewSet):
         if self.action == 'create':
             return LinkCreateSerializer
         return LinkReadSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        link = serializer.save()
+        updated_link = link_content_converter.collect(link, attempts=2)
+        serializer = self.get_serializer(updated_link)
+        return Response(serializer.data)
+
 
 
 class LinkCollectionView(ModelViewSet):

@@ -26,6 +26,15 @@ class Link(models.Model):
     MUSIC_TYPE = 'music'
     VIDEO_TYPE = 'video'
 
+    LOAD_STATUS_LOADED = 'loaded'
+    LOAD_STATUS_NOT_LOADED = 'not_loaded'
+    LOAD_STATUS_ERROR = 'error'
+
+    LOAD_STATUSES = (
+        (LOAD_STATUS_LOADED, LOAD_STATUS_LOADED),
+        (LOAD_STATUS_NOT_LOADED, LOAD_STATUS_NOT_LOADED),
+        (LOAD_STATUS_ERROR, LOAD_STATUS_ERROR),
+    )
     PAGE_TYPES = (
         (WEBSITE_TYPE, WEBSITE_TYPE),
         (BOOK_TYPE, BOOK_TYPE),
@@ -47,6 +56,7 @@ class Link(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
     collections = models.ManyToManyField(LinkCollection, related_name='links', related_query_name='link', blank=True)
+    load_status = models.CharField(max_length=20, choices=LOAD_STATUSES, default=LOAD_STATUS_NOT_LOADED)
 
     class Meta:
         unique_together = ('owner', 'url')
