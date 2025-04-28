@@ -13,7 +13,7 @@ class LinkContentCollector:
         self.request_sender = request_sender
         self.converter = converter
 
-    def collect(self, link: Link, attempts: int = 2) -> Link:
+    def collect(self, link: Link, attempts: int = 2) -> None:
         try:
             page_content = self._page_link_content(url=link.url, attempts=attempts)
             Link.objects.filter(pk=link.pk).update(
@@ -26,10 +26,8 @@ class LinkContentCollector:
             )
         except CantGetPageContent:
             Link.objects.filter(pk=link.pk).update(
-
                 load_status=Link.LOAD_STATUS_ERROR,
             )
-        return link
 
     def _page_link_content(self, url: str, attempts: int) -> PageContent:
         try:

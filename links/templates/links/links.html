@@ -75,7 +75,7 @@
                 <label class="form-label">выбранные колекции</label>
                 <div id="chosen-collections"></div>
             </div>
-            <div class="mb-3">
+            <div class="mb-3" style="display: none;">
                 <input type="text" name="collections">
                 <div class="invalid-feedback"></div>
             </div>
@@ -485,15 +485,19 @@
             var form = BsJsonForm.getInstance(this.elem)
             var formData = form.toDict()
             formData['collections'] = this._collectionIdsStringToList()
+            form.disable()
             var response = await linkApi.create(formData)
             if (response.ok) {
-                console.log(await response.json())
+                var linkData = await response.json()
+                console.info(linkData)
                 this._resetForm()
                 collapseCreateLinkForm.hide()
+                linksView.addNewLink(linkData)
             } else {
                 var responseData = await response.json()
                 form.showErrors(responseData)
             }
+            form.enable()
         }
         _collectionIdsStringToList() {
             if (this.collectionIdsInput.value == "") {
@@ -685,6 +689,13 @@
                 this.links.set(linkData.id, link)
                 this.containerElem.appendChild(linkElem)
             })
+        }
+
+        addNewLink(linkData){
+            var link = new LinkView(linkData, this.deleteLinkhandler.bind(this))
+            var linkElem = link.createElem()
+            this.links.set(linkData.id, link)
+            this.containerElem.prepend(linkElem)
         }
 
         async deleteLinkhandler(e) {

@@ -39,8 +39,9 @@ class UserLinksView(ModelViewSet):
         serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         link = serializer.save()
-        updated_link = link_content_converter.collect(link, attempts=2)
-        serializer = self.get_serializer(updated_link)
+        link_content_converter.collect(link, attempts=2)
+        link.refresh_from_db()
+        serializer = LinkReadSerializer(link)
         return Response(serializer.data)
 
 
