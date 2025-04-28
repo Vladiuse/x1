@@ -1,3 +1,4 @@
+import re
 from django.db import models
 
 from users.models import CustomUser
@@ -30,6 +31,8 @@ class Link(models.Model):
     LOAD_STATUS_NOT_LOADED = 'not_loaded'
     LOAD_STATUS_ERROR = 'error'
 
+    LINK_TYPES = [WEBSITE_TYPE, BOOK_TYPE, ARTICLE_TYPE, MUSIC_TYPE, VIDEO_TYPE]
+
     LOAD_STATUSES = (
         (LOAD_STATUS_LOADED, LOAD_STATUS_LOADED),
         (LOAD_STATUS_NOT_LOADED, LOAD_STATUS_NOT_LOADED),
@@ -50,9 +53,9 @@ class Link(models.Model):
     )
     url = models.URLField()
     title = models.CharField(max_length=254, blank=True, null=True, default=None)
-    description = models.TextField(blank=True,  null=True, default=None)
-    image_url = models.URLField(blank=True,  null=True, default=None)
-    type = models.CharField(max_length=60, blank=True, choices=PAGE_TYPES,  null=True, default=None)
+    description = models.TextField(blank=True, null=True, default=None)
+    image_url = models.URLField(blank=True, null=True, default=None)
+    type = models.CharField(max_length=60, blank=True, choices=PAGE_TYPES, null=True, default=None)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
     collections = models.ManyToManyField(LinkCollection, related_name='links', related_query_name='link', blank=True)
@@ -60,3 +63,11 @@ class Link(models.Model):
 
     class Meta:
         unique_together = ('owner', 'url')
+
+
+def normalize_link_type(link_type: str) -> str:
+    link_type = link_type.lower()
+    if '.' in link_type:
+        link_type = link_type.split('.')[0]
+    return link_type if link_type in Link.LINK_TYPES else Link.WEBSITE_TYPE
+

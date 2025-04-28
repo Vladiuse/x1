@@ -2,7 +2,7 @@ from requests.exceptions import RequestException
 
 from common.exceptions import CantGetPageContent
 from common.request_sender import RequestSender
-from links.models import Link
+from links.models import Link, normalize_link_type
 
 from .converter import Converter
 from .dto import PageContent
@@ -20,7 +20,7 @@ class LinkContentCollector:
                 url=page_content.url,
                 title=page_content.title,
                 description=page_content.description,
-                type=page_content.type,
+                type=normalize_link_type(link_type=page_content.type),
                 image_url=page_content.image,
                 load_status=Link.LOAD_STATUS_LOADED,
             )
