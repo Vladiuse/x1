@@ -1,6 +1,4 @@
-import re
 from django.db import models
-
 from users.models import CustomUser
 
 
@@ -73,4 +71,3 @@ def normalize_link_type(link_type: str | None) -> str:
     if '.' in link_type:
         link_type = link_type.split('.')[0]
     return link_type if link_type in Link.LINK_TYPES else Link.WEBSITE_TYPE
-

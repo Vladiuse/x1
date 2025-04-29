@@ -1,4 +1,5 @@
 from datetime import timedelta
+from typing import Any
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
@@ -10,7 +11,7 @@ from users.utils import generate_reset_password_code
 class CustomUserManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user(self, email: str, password: str, **extra_fields) -> 'CustomUser':
+    def create_user(self, email: str, password: str, **extra_fields: Any) -> 'CustomUser':
         if not email:
             raise ValueError('Email field required')
         email = self.normalize_email(email)
@@ -19,7 +20,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email: str, password: str, **extra_fields) -> 'CustomUser':
+    def create_superuser(self, email: str, password: str, **extra_fields: Any) -> 'CustomUser':
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)

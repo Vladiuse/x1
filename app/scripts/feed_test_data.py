@@ -1,4 +1,5 @@
 import json
+import logging
 import random
 
 from faker import Faker
@@ -66,6 +67,6 @@ def run() -> None:
             collections_to_add = random.sample(user_link_collections, k=random.randint(0, len(user_link_collections)))
             link.collections.set(collections_to_add)
 
-    print('Users', CustomUser.objects.count())
-    print('Collections', LinkCollection.objects.count())
-    print('Links', Link.objects.count())
+    logging.info('Users: %s', CustomUser.objects.count())
+    logging.info('Collections: %s', LinkCollection.objects.count())
+    logging.info('Links: %s', Link.objects.count())

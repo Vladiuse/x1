@@ -1,7 +1,7 @@
-from requests.exceptions import RequestException
-
 from common.exceptions import CantGetPageContent
 from common.request_sender import RequestSender
+from requests.exceptions import RequestException
+
 from links.models import Link, normalize_link_type
 
 from .converter import Converter

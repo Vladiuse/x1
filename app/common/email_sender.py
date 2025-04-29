@@ -36,13 +36,12 @@ class EmailSender:
             },
         }
         try:
-            response_text = self.request_sender.request(
+            self.request_sender.request(
                 url=EMAIL_JS_API_URL,
                 method='POST',
                 json=data,
                 headers=headers,
                 attempts=2,
             )
-            print(response_text)
         except RequestException as error:
             raise EmailNotSend(f'Cant send email to {email_data.email}: {error}')

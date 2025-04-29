@@ -7,8 +7,6 @@ from rest_framework.validators import ValidationError
 from users.models import CustomUser, ResetUserPasswordCode
 
 
-
-
 class CustomUserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
@@ -73,20 +71,25 @@ class CreateResetPasswordCodeSerializer(serializers.Serializer):
             raise ValidationError('User with this email not found')
         return value
 
+
 class ResetPasswordCodeSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='users:resetuserpasswordcode-detail')
-    activate_reset_password_url = serializers.HyperlinkedIdentityField(view_name='users:resetuserpasswordcode-activate-reset-password')
+    activate_reset_password_url = serializers.HyperlinkedIdentityField(
+        view_name='users:resetuserpasswordcode-activate-reset-password',
+    )
     reset_password_url = serializers.HyperlinkedIdentityField(view_name='users:resetuserpasswordcode-reset-password')
+
     class Meta:
         model = ResetUserPasswordCode
-        fields = '__all__'
-        # exclude = ('reset_password_code', 'is_used')
+        fields = ('pk', 'email', 'created', 'expire_date', 'url', 'activate_reset_password_url',
+                  'reset_password_url')
+
 
 class ActivateResetPasswordSerializer(serializers.Serializer):
     reset_password_code = serializers.CharField(max_length=6)
 
-class ResetPasswordSerializer(serializers.Serializer):
 
+class ResetPasswordSerializer(serializers.Serializer):
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 

@@ -29,4 +29,3 @@ class Converter:
             return elem['content']
         except KeyError:
             return None
-

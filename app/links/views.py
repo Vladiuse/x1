@@ -1,21 +1,29 @@
-from rest_framework.views import APIView
+from common.request_sender import RequestSender
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Q
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
-from links.link_content_collector import LinkContentCollector, Converter
-from common.request_sender import RequestSender
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from users.models import CustomUser
-from django.db.models import Count, Q
+
+from links.link_content_collector import Converter, LinkContentCollector
 
 from .models import Link, LinkCollection
-from .serializers import LinkCollectionSerializer, LinkCreateSerializer, LinkReadSerializer, LinkCollectionManagerSerializer
+from .serializers import (
+    LinkCollectionManagerSerializer,
+    LinkCollectionSerializer,
+    LinkCreateSerializer,
+    LinkReadSerializer,
+)
 
 link_content_converter = LinkContentCollector(
     request_sender=RequestSender(),
     converter=Converter(),
 )
+
+
 @login_required
 def index(request):
     links = Link.objects.filter(owner=request.user)
@@ -47,7 +55,6 @@ class UserLinksView(ModelViewSet):
         return Response(serializer.data)
 
 
-
 class LinkCollectionView(ModelViewSet):
     serializer_class = LinkCollectionSerializer
     permission_classes = [IsAuthenticated]
@@ -57,15 +64,13 @@ class LinkCollectionView(ModelViewSet):
 
 
 class LinkCollectionManagerView(APIView):
-
-
-    def post(self, request, format=None): # noqa: A002
+    def post(self, request, format=None):  # noqa: A002
         link, collection = self._get_link_and_collection(request=request)
         link.collections.add(collection)
         serializer = LinkReadSerializer(link)
         return Response(serializer.data)
 
-    def delete(self, request, format=None): # noqa: A002)
+    def delete(self, request, format=None):  # noqa: A002)
         link, collection = self._get_link_and_collection(request=request)
         link.collections.remove(collection)
         serializer = LinkReadSerializer(link)
