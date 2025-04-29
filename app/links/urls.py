@@ -11,6 +11,7 @@ app_name = 'links'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('users-stat/', views.users_stat, name='users_stat'),
     path('link-collection-manager/', views.LinkCollectionManagerView.as_view(), name='link_collection_manager'),
 ]
 urlpatterns += router.urls

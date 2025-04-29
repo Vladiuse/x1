@@ -1,0 +1,27 @@
+{%extends 'base.html'%}
+{%block content%}
+
+<div class="container mt-3">
+  <h3 class="m-3 text-center">Топ 10 пользователей по количеству ссылок</h3>
+  <table class="table table-bordered table-striped table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Email</th>
+        <th>Date Joined</th>
+        <th>Link Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.date_joined|date:"Y-m-d H:i" }}</td>
+        <td>{{ user.count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{%endblock%}

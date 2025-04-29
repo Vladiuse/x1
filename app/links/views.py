@@ -6,6 +6,8 @@ from rest_framework.viewsets import ModelViewSet
 from links.link_content_collector import LinkContentCollector, Converter
 from common.request_sender import RequestSender
 from rest_framework.response import Response
+from users.models import CustomUser
+from django.db.models import Count
 
 from .models import Link, LinkCollection
 from .serializers import LinkCollectionSerializer, LinkCreateSerializer, LinkReadSerializer, LinkCollectionManagerSerializer
@@ -75,3 +77,15 @@ class LinkCollectionManagerView(APIView):
         link = Link.objects.get(pk=serializer.validated_data['link_id'])
         collection = LinkCollection.objects.get(pk=serializer.validated_data['collection_id'])
         return link, collection
+
+
+def users_stat(request):
+    users = (
+        CustomUser.objects.prefetch_related('link')
+        .values('email', 'date_joined')
+        .annotate(count=Count('link'))
+        .order_by('-count', 'date_joined')
+    )[:10]
+
+    content = {'users': users}
+    return render(request, 'links/users_stat.html', content)
