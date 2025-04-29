@@ -17,7 +17,7 @@ class LinkContentCollector:
         try:
             page_content = self._page_link_content(url=link.url, attempts=attempts)
             Link.objects.filter(pk=link.pk).update(
-                url=page_content.url,
+                parsed_url=page_content.url,
                 title=page_content.title,
                 description=page_content.description,
                 type=normalize_link_type(link_type=page_content.type),

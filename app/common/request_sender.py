@@ -1,5 +1,6 @@
 import requests
 from requests.exceptions import RequestException
+import logging
 
 
 class RequestSender:
@@ -11,6 +12,7 @@ class RequestSender:
         for _ in range(attempts):
             try:
                 response = requests.get(url, timeout=10)
+                logging.info('%s: %s', response.status_code, url)
                 response.raise_for_status()
                 return response.text
             except RequestException as error:

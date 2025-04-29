@@ -52,6 +52,7 @@ class Link(models.Model):
         related_query_name='link',
     )
     url = models.URLField()
+    parsed_url = models.CharField(max_length=254, blank=True, null=True, default=None)
     title = models.CharField(max_length=254, blank=True, null=True, default=None)
     description = models.TextField(blank=True, null=True, default=None)
     image_url = models.URLField(blank=True, null=True, default=None)
@@ -65,7 +66,9 @@ class Link(models.Model):
         unique_together = ('owner', 'url')
 
 
-def normalize_link_type(link_type: str) -> str:
+def normalize_link_type(link_type: str | None) -> str:
+    if link_type is None:
+        return Link.WEBSITE_TYPE
     link_type = link_type.lower()
     if '.' in link_type:
         link_type = link_type.split('.')[0]
