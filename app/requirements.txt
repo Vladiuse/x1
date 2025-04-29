@@ -8,10 +8,12 @@ decorator==5.2.1
 Django==5.2
 django-extensions==4.1
 djangorestframework==3.16.0
+drf-yasg==1.21.10
 executing==2.2.0
 Faker==37.1.0
 gunicorn==23.0.0
 idna==3.10
+inflection==0.5.1
 ipython==9.2.0
 ipython_pygments_lexers==1.1.1
 jedi==0.19.2
@@ -26,6 +28,8 @@ ptyprocess==0.7.0
 pure_eval==0.2.3
 Pygments==2.19.1
 python-dotenv==1.1.0
+pytz==2025.2
+PyYAML==6.0.2
 requests==2.32.3
 soupsieve==2.7
 sqlparse==0.5.3
@@ -33,5 +37,6 @@ stack-data==0.6.3
 traitlets==5.14.3
 typing_extensions==4.13.2
 tzdata==2025.2
+uritemplate==4.1.1
 urllib3==2.4.0
 wcwidth==0.2.13
