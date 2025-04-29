@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-from users.utils import generate_reset_password_code
-from datetime import datetime, timedelta
 from django.utils import timezone
+
+from users.utils import generate_reset_password_code
+
 
 class CustomUserManager(BaseUserManager):
     use_in_migrations = True
@@ -31,6 +34,7 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
+
 class ResetUserPasswordCodeManager(models.Manager):
     def create_for_user(self, user: CustomUser) -> 'ResetUserPasswordCode':
         return self.create(
@@ -39,6 +43,7 @@ class ResetUserPasswordCodeManager(models.Manager):
             reset_password_code=generate_reset_password_code(),
             expire_date=timezone.now() + timedelta(hours=1),
         )
+
 
 class ResetUserPasswordCode(models.Model):
     MAX_ATTEMPTS = 3
@@ -58,13 +63,15 @@ class ResetUserPasswordCode(models.Model):
     objects = ResetUserPasswordCodeManager()
 
     def check_code(self, code: str) -> tuple[bool, str]:
+        if self.is_deactivated:
+            return False, 'Code deactivated'
         if self.is_verified:
             return False, 'Code already verified'
         if timezone.now() > self.expire_date:
             return False, 'Code expired'
         if self.reset_password_code == code:
             self.verify()
-            return True, "Code verified successfully."
+            return True, 'Code verified successfully.'
         self.attempts += 1
         self.save()
         if self.attempts >= self.MAX_ATTEMPTS:
@@ -73,10 +80,12 @@ class ResetUserPasswordCode(models.Model):
 
     def verify(self) -> None:
         self.is_verified = True
-        self.verified_expire_date = timezone.now() + timedelta(minutes=10)
+        self.verified_expire_date = timezone.now() + timedelta(minutes=10)  # TODO
         self.save()
 
     def is_password_can_be_reset(self) -> bool:
+        if self.is_deactivated:
+            return False
         if not self.is_verified:
             return False
         if timezone.now() > self.verified_expire_date:
@@ -88,5 +97,6 @@ class ResetUserPasswordCode(models.Model):
         self.save()
 
     def deactivate(self) -> None:
-        self.is_deactivated = True
-        self.save()
+        if not self.is_deactivated:
+            self.is_deactivated = True
+            self.save()
