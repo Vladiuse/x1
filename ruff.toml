@@ -34,6 +34,8 @@ ignore = [
 "*/views.py" = [
     "ARG002",  # args
     "ANN001",  # type annotation
+    "ANN002",  # Missing type annotation for `*args`
+    "ANN003",  # Missing type annotation for `**kwargs`
     "ANN201",  # return type in views
     "ARG001",  # Unused function argument
 ]

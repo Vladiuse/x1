@@ -4,7 +4,7 @@ from django.contrib.sessions.models import Session
 from django.utils import timezone
 
 
-def logout_user_sessions(user: 'CustomUser') -> None:
+def logout_user_sessions(user: 'CustomUser') -> None:  # noqa: F821
     sessions = Session.objects.filter(expire_date__gte=timezone.now())
     for session in sessions:
         data = session.get_decoded()
