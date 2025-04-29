@@ -53,6 +53,8 @@ class ResetUserPasswordCode(models.Model):
     attempts = models.PositiveIntegerField(default=0)
     is_password_reset = models.BooleanField(default=False)
 
+    is_deactivated = models.BooleanField(default=False)
+
     objects = ResetUserPasswordCodeManager()
 
     def check_code(self, code: str) -> tuple[bool, str]:
@@ -83,4 +85,8 @@ class ResetUserPasswordCode(models.Model):
 
     def mark_password_reset(self) -> None:
         self.is_password_reset = True
+        self.save()
+
+    def deactivate(self) -> None:
+        self.is_deactivated = True
         self.save()

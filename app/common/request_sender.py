@@ -5,13 +5,13 @@ import logging
 
 class RequestSender:
 
-    def get_content(self, url: str, attempts:int = 2) -> str:
+    def request(self, url: str, attempts:int = 2, method: str = 'GET', **kwargs) -> str:
         if attempts <= 0:
             raise ValueError('attempts must be positive integer')
         last_error = None
         for _ in range(attempts):
             try:
-                response = requests.get(url, timeout=10)
+                response = requests.request(url=url,method=method, timeout=10, **kwargs)
                 logging.info('%s: %s', response.status_code, url)
                 response.raise_for_status()
                 return response.text

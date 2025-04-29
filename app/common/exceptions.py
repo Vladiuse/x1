@@ -4,3 +4,7 @@ class AppException(Exception):
 
 class CantGetPageContent(AppException):
     """Cant get page content"""
+
+
+class EmailNotSend(AppException):
+    """Cant send email"""

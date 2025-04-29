@@ -31,7 +31,7 @@ class LinkContentCollector:
 
     def _page_link_content(self, url: str, attempts: int) -> PageContent:
         try:
-            page_text = self.request_sender.get_content(url=url, attempts=attempts)
+            page_text = self.request_sender.request(url=url, attempts=attempts)
             with open('loaded.html', 'w') as file:
                 file.write(page_text)
             return self.converter.convert(text=page_text)
