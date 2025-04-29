@@ -14,4 +14,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 CMD python manage.py migrate \
     && python manage.py collectstatic --no-input \
+    && python3 manage.py runscript feed_test_data \
     && gunicorn link_hub.wsgi:application --bind 0.0.0.0:8000
