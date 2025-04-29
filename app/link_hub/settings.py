@@ -19,7 +19,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '45.90.34.107']
+ALLOWED_HOSTS = ['127.0.0.1', '45.90.34.107', 'x-one.vim-store.ru']
 
 
 # Application definition
