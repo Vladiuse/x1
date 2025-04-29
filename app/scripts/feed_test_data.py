@@ -25,6 +25,7 @@ def run() -> None:
 
     LINKS_DATA = LINKS_DATA[:30]
     CustomUser.objects.create_user(email='vladiuse@gmail.com', password='0000')
+    CustomUser.objects.create_user(email='guest@gmail.com', password='0000')
 
     unique_email = [f.email() for _ in range(100)][:30]
     users_to_create = [CustomUser(email=email) for email in unique_email]
@@ -45,7 +46,7 @@ def run() -> None:
 
     for user in created_users:
         user_link_collections = list(LinkCollection.objects.filter(owner=user))
-        links_data = random.sample(LINKS_DATA, k=random.randint(5, len(LINKS_DATA)))
+        links_data = random.sample(LINKS_DATA, k=random.randint(15, len(LINKS_DATA)))
         links_to_create = []
         for link_item in links_data:
             link = Link(
@@ -56,6 +57,7 @@ def run() -> None:
                 description=link_item['description'],
                 type=link_item['type'],
                 image_url=link_item['image_url'],
+                load_status=Link.LOAD_STATUS_LOADED,
             )
             links_to_create.append(link)
         Link.objects.bulk_create(links_to_create)
