@@ -19,7 +19,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.0', '45.90.34.107']
+ALLOWED_HOSTS = ['127.0.0.1', '45.90.34.107']
 
 
 # Application definition
@@ -74,9 +74,9 @@ WSGI_APPLICATION = 'link_hub.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_DBNAME'),
-        'USER': os.environ.get('DB_USERNAME'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
         'PORT': os.environ.get('DB_PORT'),
     },
@@ -125,7 +125,9 @@ STATIC_URL = 'static/'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # BASE_DIR — это путь к корню проекта
+    BASE_DIR / "staticfiles",  # BASE_DIR — это путь к корню проекта
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')

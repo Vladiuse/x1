@@ -1,8 +1,17 @@
-FROM python:3.11
+# Dockerfile
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 WORKDIR /app
-COPY . /app/
-RUN apt-get update && apt-get install -y curl && apt-get clean
-RUN pip install -r requirements.txt
-CMD python3 manage.py migrate \
+
+COPY ./app /app
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+#CMD ["gunicorn", "link_hub.wsgi:application", "--bind", "0.0.0.0:8000"]
+
+CMD python manage.py migrate \
     && python manage.py collectstatic --no-input \
-    && gunicorn link_hub.wsgi:application --bind 0.0.0.0:8000 --log-level info
+    && gunicorn link_hub.wsgi:application --bind 0.0.0.0:8000
