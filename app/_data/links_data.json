@@ -1,35 +1,11 @@
 [
     {
-        "url": "https://music.yandex.ru/album/26534567/track/112345678",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
-        "url": "https://music.yandex.ru/album/28123456/track/127890123",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://open.spotify.com/track/5QDLhrAOJJdNAmCTJ8xMyW",
         "parsed_url": "https://open.spotify.com/track/5QDLhrAOJJdNAmCTJ8xMyW",
         "title": "Dynamite",
         "description": "BTS \u00b7 BE \u00b7 Song \u00b7 2020",
         "type": "music",
         "image_url": "https://i.scdn.co/image/ab67616d0000b273c07d5d2fdc02ae252fcd07e5"
-    },
-    {
-        "url": "https://music.yandex.ru/album/27890123/track/124567890",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://www.youtube.com/watch?v=iB_XiSSFrJo",
@@ -56,28 +32,12 @@
         "image_url": "https://i.ytimg.com/vi/Dvwaq1rwioQ/maxresdefault.jpg"
     },
     {
-        "url": "https://music.yandex.ru/album/26678901/track/113456789",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://www.youtube.com/watch?v=KI8b6GQ5C80",
         "parsed_url": "https://www.youtube.com/watch?v=KI8b6GQ5C80",
         "title": "Eloy - Ocean (1977) Full Album",
         "description": "Poseidon's Creation - 00:00Incarnation of Logos - 11:44Decay of Logos - 20:12Atlantis' Agony At June 5th, 8498, 13 p.m. Gregorian Earthtime - 28:31All rights...",
         "type": "video",
         "image_url": "https://i.ytimg.com/vi/KI8b6GQ5C80/hqdefault.jpg"
-    },
-    {
-        "url": "https://music.yandex.ru/album/28567890/track/131234567",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://www.youtube.com/watch?v=xOerkHz6UYE&t=4689s",
@@ -112,28 +72,12 @@
         "image_url": "https://i.ytimg.com/vi/ce_wfnisNPw/maxresdefault.jpg"
     },
     {
-        "url": "https://music.yandex.ru/album/27790451/track/123456790",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://www.youtube.com/watch?v=1kLMU5xi-PU&list=RD1kLMU5xi-PU&start_radio=1",
         "parsed_url": "https://www.youtube.com/watch?v=1kLMU5xi-PU&list=RD1kLMU5xi-PU",
         "title": "Metallica: ...And Justice for All (Montreal, QC, Canada - August 9, 2014)",
         "description": "We're celebrating #30YearsOfJustice by posting live versions of each song from the album from over the years.Filmed live at the Heavy MTL Festival at  Parc J...",
         "type": "video",
         "image_url": "https://i.ytimg.com/vi/1kLMU5xi-PU/maxresdefault.jpg"
-    },
-    {
-        "url": "https://music.yandex.ru/album/30678901/track/152345678",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://open.spotify.com/track/5YqltLsjdqFtvqE7Nrysvs",
@@ -160,14 +104,6 @@
         "image_url": "https://i.ytimg.com/vi/TOFdTgtxSN0/maxresdefault.jpg"
     },
     {
-        "url": "https://music.yandex.ru/album/28456789/track/130123456",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://www.youtube.com/watch?v=IjGvE80qQDc&pp=0gcJCYQJAYcqIYzv",
         "parsed_url": "https://www.youtube.com/watch?v=IjGvE80qQDc",
         "title": "Zero Point",
@@ -182,14 +118,6 @@
         "description": "David Guetta, Bebe Rexha \u00b7 I'm Good (Blue) \u00b7 Song \u00b7 2022",
         "type": "music",
         "image_url": "https://i.scdn.co/image/ab67616d0000b273933c036cd61cd40d3f17a9c4"
-    },
-    {
-        "url": "https://music.yandex.ru/album/29901234/track/145678901",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://www.youtube.com/watch?v=ECYLHiXvrBQ&pp=0gcJCYQJAYcqIYzv",
@@ -208,14 +136,6 @@
         "image_url": "https://i.ytimg.com/vi/NU96ss5pEoE/maxresdefault.jpg?v=653ec3ea"
     },
     {
-        "url": "https://music.yandex.ru/album/27456789/track/120123456",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://open.spotify.com/track/5XeFesFbtLpXzIVDNQP22n",
         "parsed_url": "https://open.spotify.com/track/5XeFesFbtLpXzIVDNQP22n",
         "title": "I Wanna Be Yours",
@@ -230,14 +150,6 @@
         "description": "Glass Animals \u00b7 Dreamland \u00b7 Song \u00b7 2020",
         "type": "music",
         "image_url": "https://i.scdn.co/image/ab67616d0000b273712701c5e263efc8726b1464"
-    },
-    {
-        "url": "https://music.yandex.ru/album/28678901/track/132345678",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://open.spotify.com/track/6habFhsOp2NvshLv26DqMb",
@@ -256,36 +168,12 @@
         "image_url": "https://i.ytimg.com/vi/Nh9BrD3xIeU/hqdefault.jpg"
     },
     {
-        "url": "https://music.yandex.ru/album/27567890/track/121234567",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://www.youtube.com/watch?v=0rMyuKXK88Q",
         "parsed_url": "https://www.youtube.com/watch?v=0rMyuKXK88Q",
         "title": "Cafe del Mar Vol. 13 CD 1",
         "description": "",
         "type": "video",
         "image_url": "https://i.ytimg.com/vi/0rMyuKXK88Q/hqdefault.jpg"
-    },
-    {
-        "url": "https://music.yandex.ru/album/29012345/track/136789012",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
-        "url": "https://music.yandex.ru/album/26901234/track/115123456",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://www.youtube.com/watch?v=WniAioKkU70",
@@ -318,14 +206,6 @@
         "description": "\u00d0\u009d\u00d0\u00b0\u00d0\u00b9\u00d0\u00b4\u00d1\u0091\u00d1\u0082\u00d1\u0081\u00d1\u008f \u00d0\u00b2\u00d1\u0081\u00d1\u0091",
         "type": "website",
         "image_url": "https://yastatic.net/s3/home-static/_/37/37a02b5dc7a51abac55d8a5b6c865f0e.png"
-    },
-    {
-        "url": "https://music.yandex.ru/album/30234567/track/148901234",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://www.youtube.com/watch?v=I3P0EyjZgAc",
@@ -368,14 +248,6 @@
         "image_url": "https://avatars.yandex.net/get-music-content/33216/31fa2e6f.a.2303802-1/m1000x1000"
     },
     {
-        "url": "https://music.yandex.ru/album/27901234/track/125678901",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://open.spotify.com/track/3FAJ6O0NOHQV8Mc5Ri6ENp",
         "parsed_url": "https://open.spotify.com/track/3FAJ6O0NOHQV8Mc5Ri6ENp",
         "title": "Heartbreak Anniversary",
@@ -390,22 +262,6 @@
         "description": "DaBaby \u00b7 KIRK \u00b7 Song \u00b7 2019",
         "type": "music",
         "image_url": "https://i.scdn.co/image/ab67616d0000b273f2b94b2fda4f08836d6371ba"
-    },
-    {
-        "url": "https://music.yandex.ru/album/12345678/track/98765432",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
-        "url": "https://music.yandex.ru/album/28789012/track/133456789",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://open.spotify.com/track/3AJwUDP919kvQ9QcozQPxg",
@@ -464,22 +320,6 @@
         "image_url": "https://i.ytimg.com/vi/DlSOqhVYDrw/maxresdefault.jpg"
     },
     {
-        "url": "https://music.yandex.ru/album/29345678/track/139012345",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
-        "url": "https://music.yandex.ru/album/29123456/track/137890123",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://www.youtube.com/watch?v=HuFYqnbVbzY",
         "parsed_url": "https://www.youtube.com/watch?v=HuFYqnbVbzY",
         "title": "jazz lofi radio \ud83c\udfb7 beats to chill/study to",
@@ -502,22 +342,6 @@
         "description": "A minimal ambient track made with a single synth, where each note holds immense weight, resonating in vast space, evoking loneliness, mystery, and cosmic won...",
         "type": "video",
         "image_url": "https://i.ytimg.com/vi/fbR0t7CZ8X4/maxresdefault.jpg"
-    },
-    {
-        "url": "https://music.yandex.ru/album/30456789/track/150123456",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
-        "url": "https://music.yandex.ru/album/29234567/track/138901234",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://open.spotify.com/track/4o6BgsqLIBViaGVbx5rbRk",
@@ -552,28 +376,12 @@
         "image_url": "https://i.ytimg.com/vi/hYte5EPuyus/maxresdefault.jpg"
     },
     {
-        "url": "https://music.yandex.ru/album/30012345/track/146789012",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://www.youtube.com/watch?v=wQMwfoXg5JE",
         "parsed_url": "https://www.youtube.com/watch?v=wQMwfoXg5JE",
         "title": "BLADE RUNNER: End Titles Music (Full Version) by Vangelis",
         "description": "Awesome 80s music to one of my all time favourite films; BLADE RUNNER.Blade Runner is the property of Ridley Scott and respective owners. No Copyright Infrin...",
         "type": "video",
         "image_url": "https://i.ytimg.com/vi/wQMwfoXg5JE/maxresdefault.jpg"
-    },
-    {
-        "url": "https://music.yandex.ru/album/28012345/track/126789012",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://www.youtube.com/watch?v=XXzOkCLdFwI&list=PLyunq8uLx6SpfAkGnMyHawPpSsaWRY1Rp&pp=gAQB8AUB",
@@ -592,36 +400,12 @@
         "image_url": "https://i.ytimg.com/vi/96rxDLrk054/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgZShYMA8=&rs=AOn4CLC9UHZoileDka9Ude7Ld7d8M_0qRQ"
     },
     {
-        "url": "https://music.yandex.ru/album/29789012/track/143456789",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
-        "url": "https://music.yandex.ru/album/26890123/track/114567890",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://www.youtube.com/watch?v=NDJn0SQehb4",
         "parsed_url": "https://www.youtube.com/watch?v=NDJn0SQehb4",
         "title": "Stellardrone - Light Years [Full Album]",
         "description": "\u25ba Subscribe: http://bit.ly/SubscribePsyMuseStellardrone - Light Years, released June 22, 2013\u25ba Get it: http://stellardrone.bandcamp.com/album/light-yearsStel...",
         "type": "video",
         "image_url": "https://i.ytimg.com/vi/NDJn0SQehb4/maxresdefault.jpg"
-    },
-    {
-        "url": "https://music.yandex.ru/album/27189012/track/118123456",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://music.yandex.ru/album/29456789/track/140123456",
@@ -640,14 +424,6 @@
         "image_url": "https://i.scdn.co/image/ab67616d0000b2730c13d3d5a503c84fcc60ae94"
     },
     {
-        "url": "https://music.yandex.ru/album/29678901/track/142345678",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://open.spotify.com/track/0e8nrvls4Qqv5Rfa2UhqmO",
         "parsed_url": "https://open.spotify.com/track/0e8nrvls4Qqv5Rfa2UhqmO",
         "title": "THATS WHAT I WANT",
@@ -656,28 +432,12 @@
         "image_url": "https://i.scdn.co/image/ab67616d0000b273be82673b5f79d9658ec0a9fd"
     },
     {
-        "url": "https://music.yandex.ru/album/27790451/track/123456791",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://www.youtube.com/watch?v=VsqXU6YTgvo",
         "parsed_url": "https://www.youtube.com/watch?v=VsqXU6YTgvo",
         "title": "Focus Music for Work \u2013 Deep Chill Concentration Beats for Coding and Study",
         "description": "\u203c\ufe0f Experience the flow state now!\ud83c\udf0c Lose Yourself in Hypnotic Beats and Soothing SoundscapesLet the rhythmic pulses and atmospheric textures guide you into a...",
         "type": "video",
         "image_url": "https://i.ytimg.com/vi/VsqXU6YTgvo/maxresdefault.jpg"
-    },
-    {
-        "url": "https://music.yandex.ru/album/30123456/track/147890123",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://open.spotify.com/track/6Uj1ctrBOjOas8xZXGqKk4",
@@ -728,14 +488,6 @@
         "image_url": "https://yastatic.net/s3/home-static/_/37/37a02b5dc7a51abac55d8a5b6c865f0e.png"
     },
     {
-        "url": "https://music.yandex.ru/album/28901234/track/135678901",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://open.spotify.com/track/4RVwu0g32PAqgUiJoXsdF8",
         "parsed_url": "https://open.spotify.com/track/4RVwu0g32PAqgUiJoXsdF8",
         "title": "Happier Than Ever",
@@ -744,28 +496,12 @@
         "image_url": "https://i.scdn.co/image/ab67616d0000b2732a038d3bf875d23e4aeaa84e"
     },
     {
-        "url": "https://music.yandex.ru/album/27123456/track/117890123",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://music.yandex.ru/album/27790451/track/123456789",
         "parsed_url": null,
         "title": "\u00d0\u00af\u00d0\u00bd\u00d0\u00b4\u00d0\u00b5\u00d0\u00ba\u00d1\u0081",
         "description": "\u00d0\u009d\u00d0\u00b0\u00d0\u00b9\u00d0\u00b4\u00d1\u0091\u00d1\u0082\u00d1\u0081\u00d1\u008f \u00d0\u00b2\u00d1\u0081\u00d1\u0091",
         "type": "website",
         "image_url": "https://yastatic.net/s3/home-static/_/37/37a02b5dc7a51abac55d8a5b6c865f0e.png"
-    },
-    {
-        "url": "https://music.yandex.ru/album/29890123/track/144567890",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://music.yandex.ru/album/27678901/track/122345678",
@@ -782,14 +518,6 @@
         "description": "Provided to YouTube by Rhino/Warner RecordsNo More Mr. Nice Guy \u00b7 Alice CooperEven More Dazed and Confused\u2117 1973 Warner Records Inc.Lead Vocals: Alice Cooper...",
         "type": "video",
         "image_url": "https://i.ytimg.com/vi/PE1vGT-hlLI/maxresdefault.jpg"
-    },
-    {
-        "url": "https://music.yandex.ru/album/27790451/track/123456792",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://open.spotify.com/track/5ZULALImTm80tzUbYQYM9d",
@@ -816,28 +544,12 @@
         "image_url": "https://i.scdn.co/image/ab67616d0000b273806c160566580d6335d1f16c"
     },
     {
-        "url": "https://music.yandex.ru/album/27012345/track/116789012",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
-    },
-    {
         "url": "https://open.spotify.com/track/6I9VzXrHxO9rA9A5euc8Ak",
         "parsed_url": "https://open.spotify.com/track/6I9VzXrHxO9rA9A5euc8Ak",
         "title": "Toxic",
         "description": "Britney Spears \u00b7 In The Zone \u00b7 Song \u00b7 2003",
         "type": "music",
         "image_url": "https://i.scdn.co/image/ab67616d0000b273efc6988972cb04105f002cd4"
-    },
-    {
-        "url": "https://music.yandex.ru/album/26789012/track/114123456",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://www.youtube.com/watch?v=7d6rzXVlbjg",
@@ -958,14 +670,6 @@
         "description": "Don Eladio makes fun of Don Hector Salamanca.Season 6 Episode 9 - Fun and Games: Gus attempts to smooth things over with the cartel while Mike ties up loose ...",
         "type": "video",
         "image_url": "https://i.ytimg.com/vi/CB6Hi0Cmwg0/maxresdefault.jpg"
-    },
-    {
-        "url": "https://music.yandex.ru/album/28345678/track/129012345",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://www.youtube.com/watch?v=t4dbSg2p6bs&pp=0gcJCYQJAYcqIYzv",
@@ -1686,14 +1390,6 @@
         "description": "\u041f\u0440\u0438\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044e, \u0441 \u0432\u0430\u043c\u0438 DAMIANoNE. \u0412 \u044d\u0442\u043e\u043c \u0432\u0438\u0434\u0435\u043e, \u043a\u043e\u0442\u043e\u0440\u043e\u0435 \u0441\u0434\u0435\u043b\u0430\u043d\u043e \u0432 \u0444\u043e\u0440\u043c\u0430\u0442\u0435 \"\u0422\u0435\u043e\u0440\u0438\u044f \u0413\u043e\u0442\u0438\u043a\u0430\" (\u0445\u043e\u0442\u044f \u044d\u0442\u043e \u043d\u0435 \u0442\u0435\u043e\u0440\u0438\u044f, \u0430 \u0433\u0438\u043f\u043e\u0442\u0435\u0437\u0430), \u044f \u043f\u043e\u0440\u0430\u0441\u0441\u0443\u0436\u0434\u0430\u044e \u043d\u0435 \u0442\u0435\u043c\u0443 \u0442\u043e\u0433\u043e, \u043a\u0430\u043a \u043e\u0440\u043a\u0438...",
         "type": "video",
         "image_url": "https://i.ytimg.com/vi/3M4V7sRiJJI/maxresdefault.jpg"
-    },
-    {
-        "url": "https://music.yandex.ru/album/28234567/track/128901234",
-        "parsed_url": null,
-        "title": null,
-        "description": null,
-        "type": "website",
-        "image_url": null
     },
     {
         "url": "https://open.spotify.com/track/5p7ujcrUXASCNwRaWNHR1C",
