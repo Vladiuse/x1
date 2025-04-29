@@ -99,7 +99,7 @@ class ResetUserPasswordCode(models.Model):
 
     def verify(self) -> None:
         self.is_verified = True
-        self.verified_expire_date = timezone.now() + timedelta(minutes=10)  # TODO
+        self.verified_expire_date = timezone.now() + timedelta(minutes=10)
         self.save()
 
     def is_password_can_be_reset(self) -> bool:
