@@ -1,0 +1,21 @@
+.login-form-wrap{
+
+    display: flex;
+    justify-content: center;
+    padding: 30px 10px;
+  }
+  .login-form-wrap form{
+    width: 400px;
+  }
+  .login-form-wrap form button[type=submit]{
+    width: 100%;
+  }
+  #registry{
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    flex-direction: column;
+  }
+  input[name="username"]{
+    text-transform: lowercase;
+  }
