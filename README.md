@@ -43,7 +43,7 @@ Swagger документация API: http://localhost:8000/swagger/
 Админка Django: http://localhost:8000/admin/
 
 
-### Сервер
+## Сервер
 Сайт доступен по следующей ссылке (ssl сертификата нет)
 
 http://x-one.vim-store.ru/

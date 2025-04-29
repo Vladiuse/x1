@@ -49,17 +49,35 @@ class ResetUserPasswordCodeManager(models.Manager):
 class ResetUserPasswordCode(models.Model):
     MAX_ATTEMPTS = 3
 
-    user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        to=CustomUser,
+        on_delete=models.CASCADE,
+    )
     email = models.EmailField()
-    created = models.DateTimeField(auto_now_add=True)
-    reset_password_code = models.CharField(max_length=6)
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    reset_password_code = models.CharField(
+        max_length=6,
+    )
     expire_date = models.DateTimeField()
-    is_verified = models.BooleanField(default=False)
-    verified_expire_date = models.DateTimeField(null=True, default=None)
-    attempts = models.PositiveIntegerField(default=0)
-    is_password_reset = models.BooleanField(default=False)
+    is_verified = models.BooleanField(
+        default=False,
+    )
+    verified_expire_date = models.DateTimeField(
+        null=True,
+        default=None,
+    )
+    attempts = models.PositiveIntegerField(
+        default=0,
+    )
+    is_password_reset = models.BooleanField(
+        default=False,
+    )
 
-    is_deactivated = models.BooleanField(default=False)
+    is_deactivated = models.BooleanField(
+        default=False,
+    )
 
     objects = ResetUserPasswordCodeManager()
 

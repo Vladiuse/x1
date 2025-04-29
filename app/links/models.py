@@ -9,10 +9,19 @@ class LinkCollection(models.Model):
         related_name='collections',
         related_query_name='collection',
     )
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=254, blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-    edited = models.DateTimeField(auto_now=True)
+    name = models.CharField(
+        max_length=50,
+    )
+    description = models.CharField(
+        max_length=254,
+        blank=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    edited = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
         unique_together = ('owner', 'name')
@@ -50,15 +59,52 @@ class Link(models.Model):
         related_query_name='link',
     )
     url = models.URLField()
-    parsed_url = models.CharField(max_length=254, blank=True, null=True, default=None)
-    title = models.CharField(max_length=254, blank=True, null=True, default=None)
-    description = models.TextField(blank=True, null=True, default=None)
-    image_url = models.URLField(blank=True, null=True, default=None)
-    type = models.CharField(max_length=60, blank=True, choices=PAGE_TYPES, null=True, default=None)
-    created = models.DateTimeField(auto_now_add=True)
-    edited = models.DateTimeField(auto_now=True)
-    collections = models.ManyToManyField(LinkCollection, related_name='links', related_query_name='link', blank=True)
-    load_status = models.CharField(max_length=20, choices=LOAD_STATUSES, default=LOAD_STATUS_NOT_LOADED)
+    parsed_url = models.CharField(
+        max_length=254,
+        blank=True,
+        null=True,
+        default=None,
+    )
+    title = models.CharField(
+        max_length=254,
+        blank=True,
+        null=True,
+        default=None,
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        default=None,
+    )
+    image_url = models.URLField(
+        blank=True,
+        null=True,
+        default=None,
+    )
+    type = models.CharField(
+        max_length=60,
+        blank=True,
+        choices=PAGE_TYPES,
+        null=True,
+        default=None,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    edited = models.DateTimeField(
+        auto_now=True,
+    )
+    collections = models.ManyToManyField(
+        LinkCollection,
+        related_name='links',
+        related_query_name='link',
+        blank=True,
+    )
+    load_status = models.CharField(
+        max_length=20,
+        choices=LOAD_STATUSES,
+        default=LOAD_STATUS_NOT_LOADED,
+    )
 
     class Meta:
         unique_together = ('owner', 'url')
