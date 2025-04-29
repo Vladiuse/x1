@@ -24,8 +24,8 @@ def run() -> None:
         LINKS_DATA = json.load(file)
 
     LINKS_DATA = LINKS_DATA[:30]
-    CustomUser.objects.create_user(email='vladiuse@gmail.com', password='0000')
-    CustomUser.objects.create_user(email='guest@gmail.com', password='0000')
+    CustomUser.objects.create_superuser(email='vladiuse@gmail.com', password='0000')
+    CustomUser.objects.create_superuser(email='guest@gmail.com', password='0000')
 
     unique_email = [f.email() for _ in range(100)][:30]
     users_to_create = [CustomUser(email=email) for email in unique_email]
