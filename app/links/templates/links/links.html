@@ -543,6 +543,7 @@
         }
 
         async addToCollectionEventHandler(e) {
+            e.preventDefault()
             var element = e.currentTarget
             var collectionId = element.dataset.collectionId
             var linkId = this.data.id

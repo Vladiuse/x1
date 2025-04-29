@@ -9,7 +9,12 @@
         <th>#</th>
         <th>Email</th>
         <th>Date Joined</th>
-        <th>Link Count</th>
+        <th>Total Link Count</th>
+        <th>Website</th>
+        <th>Book</th>
+        <th>Article</th>
+        <th>Music</th>
+        <th>Video</th>
       </tr>
     </thead>
     <tbody>
@@ -19,9 +24,15 @@
         <td>{{ user.email }}</td>
         <td>{{ user.date_joined|date:"Y-m-d H:i" }}</td>
         <td>{{ user.count }}</td>
+        <td>{{ user.type_wesite }}</td>
+        <td>{{ user.type_book }}</td>
+        <td>{{ user.type_article }}</td>
+        <td>{{ user.type_music }}</td>
+        <td>{{ user.type_video }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+
 {%endblock%}

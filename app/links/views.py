@@ -7,7 +7,7 @@ from links.link_content_collector import LinkContentCollector, Converter
 from common.request_sender import RequestSender
 from rest_framework.response import Response
 from users.models import CustomUser
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from .models import Link, LinkCollection
 from .serializers import LinkCollectionSerializer, LinkCreateSerializer, LinkReadSerializer, LinkCollectionManagerSerializer
@@ -83,7 +83,14 @@ def users_stat(request):
     users = (
         CustomUser.objects.prefetch_related('link')
         .values('email', 'date_joined')
-        .annotate(count=Count('link'))
+        .annotate(
+            count=Count('link'),
+            type_wesite=Count('link', filter=Q(link__type=Link.WEBSITE_TYPE)),
+            type_book=Count('link', filter=Q(link__type=Link.BOOK_TYPE)),
+            type_article=Count('link', filter=Q(link__type=Link.ARTICLE_TYPE)),
+            type_music=Count('link', filter=Q(link__type=Link.MUSIC_TYPE)),
+            type_video=Count('link', filter=Q(link__type=Link.VIDEO_TYPE)),
+        )
         .order_by('-count', 'date_joined')
     )[:10]
 
